@@ -63,12 +63,12 @@
       --txt:#f1f3f7; --dim:#aab1bd;
     }
     html,body{min-height:100%}
-    html{background:#9aa1ad;-webkit-tap-highlight-color:transparent}
+    html{background:#000;-webkit-tap-highlight-color:transparent}
     body{overscroll-behavior-y:contain;-webkit-touch-callout:none}
     button,.slot,.key{touch-action:manipulation}
     body{
       margin:0; font-family:'VT323',monospace; font-size:22px; color:var(--txt);
-      background:linear-gradient(180deg,#b0b6c1 0%,#9aa1ad 55%,#848b98 100%) fixed;
+      background:transparent;
       overflow-x:hidden; overflow-x:clip; user-select:none; image-rendering:pixelated;
     }
     body::before{
@@ -274,6 +274,33 @@
     .chatbadge{position:absolute;top:-9px;right:-9px;min-width:22px;height:22px;padding:0 4px;align-items:center;justify-content:center;background:#d2343c;color:#fff;
       border:2px solid var(--ink);font-family:'Press Start 2P',monospace;font-size:9px}
     #chatPanel input.field,.chatform input.field{font-size:16px}
+    /* ===== FUNDO ANIMADO + TELA DE LOGIN ===== */
+    #bgCanvas{position:fixed;left:0;top:0;width:100%;height:100%;z-index:0;pointer-events:none;image-rendering:auto}
+    header,main,footer{position:relative;z-index:1}
+    #landing{display:none;position:fixed;inset:0;z-index:5;overflow-y:auto;padding:24px 16px;flex-direction:column;align-items:center;justify-content:center;gap:28px;
+      -webkit-overflow-scrolling:touch;font-family:'Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif}
+    body.landing-on #landing{display:flex}
+    body.landing-on header,body.landing-on main,body.landing-on footer{display:none!important}
+    .lg-logo{font-family:'Press Start 2P',monospace;font-size:clamp(22px,6vw,40px);color:#f5c04a;text-shadow:4px 4px 0 #000;letter-spacing:1px;text-align:center}
+    .lg-logo span{color:#9fd8e2}
+    .lg-card{width:min(420px,100%);box-sizing:border-box;padding:34px 30px 26px;border-radius:44px;color:#e9f1f4;margin:auto 0;
+      background:linear-gradient(90deg,#0a9a8e 0%,#2f6e86 48%,#503a7a 100%);box-shadow:0 24px 70px rgba(0,0,0,.65),inset 0 0 0 1px rgba(255,255,255,.08);
+      -webkit-user-select:text;user-select:text}
+    .lg-card h2{margin:0 0 18px;font-size:42px;font-weight:300;text-align:center;color:#dbe6ec;letter-spacing:.5px}
+    .lg-card label{display:block;margin:12px 0 6px 14px;font-size:15px;color:rgba(235,244,247,.8)}
+    .lg-card input{display:block;width:100%;box-sizing:border-box;height:48px;padding:0 22px;border:0;border-radius:999px;background:#d3d3d3;color:#1b2430;
+      font-size:17px;font-family:inherit;outline:none;-webkit-user-select:text;user-select:text;-webkit-appearance:none;appearance:none}
+    .lg-card input:focus{box-shadow:0 0 0 3px rgba(59,147,212,.75)}
+    #lgErr{display:none;margin:14px 0 0;padding:9px 14px;border-radius:16px;background:rgba(110,16,30,.55);color:#ffe0e0;font-size:14px;line-height:1.3;text-align:center}
+    .lg-btn{display:block;width:100%;height:52px;margin-top:22px;border:0;border-radius:999px;background:#3b93d4;color:#eaf4fb;font-size:22px;font-weight:700;
+      font-family:inherit;cursor:pointer;transition:filter .15s,transform .05s}
+    .lg-btn:hover{filter:brightness(1.12)} .lg-btn:active{transform:translateY(1px)} .lg-btn:disabled{opacity:.6;cursor:wait}
+    .lg-row{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:16px;font-size:15px;color:rgba(235,244,247,.85)}
+    .lg-link{background:none;border:0;padding:0;color:#bfe8ff;font:inherit;font-weight:700;text-decoration:underline;cursor:pointer}
+    .lg-guest{display:block;width:100%;height:46px;margin-top:16px;border:2px solid rgba(255,255,255,.55);border-radius:999px;background:transparent;color:#eaf4f7;
+      font-size:17px;font-family:inherit;cursor:pointer;transition:background .15s}
+    .lg-guest:hover{background:rgba(255,255,255,.14)}
+    .lg-note{margin:12px 6px 0;font-size:13px;line-height:1.35;text-align:center;color:rgba(235,244,247,.65)}
     .bjopps{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;width:100%}
     .bjopp{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px;border:3px solid transparent}
     .bjopp.turn{border-color:var(--y)}
@@ -299,6 +326,27 @@
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between antialiased">
+  <script>try { if (!localStorage.getItem('arcadehub_uid') && !sessionStorage.getItem('arcadehub_guest')) document.body.classList.add('landing-on'); } catch (e) {}</script>
+  <!-- TELA INICIAL: login / cadastro / entrar sem login -->
+  <div id="landing">
+    <div class="lg-logo">ARCADE<span>HUB</span></div>
+    <form id="lgForm" class="lg-card" autocomplete="on">
+      <h2 id="lgTitle">Login</h2>
+      <label for="lgUser">Nome de usuário</label>
+      <input id="lgUser" name="username" type="text" autocomplete="username" autocapitalize="characters" spellcheck="false" maxlength="16" placeholder="Ex: CYBERPLAYER99">
+      <label for="lgPass">Senha</label>
+      <input id="lgPass" name="password" type="password" autocomplete="current-password" placeholder="******">
+      <div id="lgErr" role="alert"></div>
+      <button type="submit" id="lgSubmit" class="lg-btn">Entrar</button>
+      <div class="lg-row">
+        <span id="lgToggleText">Ainda não tem conta?</span>
+        <button type="button" id="lgToggle" class="lg-link">Criar conta</button>
+      </div>
+      <button type="button" id="lgGuest" class="lg-guest">Entrar sem login</button>
+      <p class="lg-note">Sem login você joga solo, mas não usa o online, o chat nem o ranking.</p>
+    </form>
+  </div>
+
 
   <!-- BARRA SUPERIOR -->
   <header class="px-3 pt-3 z-40">
@@ -481,6 +529,7 @@
         <div class="hud cut w-full flex justify-between items-center mb-4 gap-2" style="padding:10px 14px">
           <div class="ttl text-xs sm:text-sm t-y flex items-center gap-2"><i class="ico ico-tetro"></i> CYBER TETRIS</div>
           <div id="tetrisStatusBadge" class="plate ttl t-c text-center" style="font-size:10px">EM ESPERA</div>
+          <button id="btnTetrisPause" onclick="pauseTetris()" class="slot cut slot-y slot-sm hidden">&#9208; PAUSA</button>
           <button onclick="leaveTetrisGame()" class="slot cut slot-r slot-sm">SAIR</button>
         </div>
 
@@ -2155,6 +2204,108 @@
   })();
   </script>
 
+  <!-- FUNDO ANIMADO (peças de Tetris subindo) + TELA DE LOGIN -->
+  <script>
+  (function () {
+    // ---------- fundo animado ----------
+    var cv = document.createElement('canvas'); cv.id = 'bgCanvas';
+    document.body.insertBefore(cv, document.body.firstChild);
+    var ctx = cv.getContext('2d');
+    if (ctx) {
+      var SHAPES = {
+        I: [[0, 0], [1, 0], [2, 0], [3, 0]], O: [[0, 0], [1, 0], [0, 1], [1, 1]], T: [[0, 0], [1, 0], [2, 0], [1, 1]],
+        S: [[1, 0], [2, 0], [0, 1], [1, 1]], Z: [[0, 0], [1, 0], [1, 1], [2, 1]], J: [[0, 0], [0, 1], [1, 1], [2, 1]], L: [[2, 0], [0, 1], [1, 1], [2, 1]]
+      };
+      var COLORS = {   // base, claro, escuro
+        I: ['#2dc6d8', '#a7e7ef', '#136b76'], O: ['#ffc52a', '#ffe7a5', '#8c6b11'], T: ['#a45bd9', '#d9b0f2', '#5e2a8c'],
+        S: ['#84d52c', '#cbeda6', '#457412'], Z: ['#e93f45', '#f6aeb1', '#801d20'], J: ['#2f8be8', '#9cc6f6', '#1a4d8c'], L: ['#ff8a1d', '#ffc88a', '#a35208']
+      };
+      var KEYS = Object.keys(SHAPES), W = 0, H = 0, dpr = 1, pieces = [], last = 0;
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      var spawn = function (initial) {
+        var k = KEYS[(Math.random() * KEYS.length) | 0], cells = SHAPES[k], s = 10 + Math.random() * 26, d = (s - 10) / 26;
+        var mx = 0, my = 0; cells.forEach(function (c) { if (c[0] > mx) mx = c[0]; if (c[1] > my) my = c[1]; });
+        return {
+          k: k, cells: cells, s: s, cx: (mx + 1) / 2, cy: (my + 1) / 2, x: Math.random() * W,
+          y: initial ? Math.random() * (H + 200) : H + s * 5 + Math.random() * H * 0.35,
+          rot: Math.random() * 6.283, vr: (Math.random() - 0.5) * 0.7, vy: 16 + d * 62 + Math.random() * 10, a: 0.3 + d * 0.5
+        };
+      };
+      var rebuild = function () {
+        dpr = Math.min(window.devicePixelRatio || 1, 2); W = window.innerWidth; H = window.innerHeight;
+        cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        var n = Math.max(18, Math.min(56, Math.round(W * H / 24000)));
+        pieces = []; for (var i = 0; i < n; i++) pieces.push(spawn(true));
+        pieces.sort(function (a, b) { return a.s - b.s; });   // as pequenas (longe) ficam atrás
+      };
+      var block = function (x, y, s, col) {
+        var e = Math.max(1, Math.round(s * 0.14));
+        ctx.fillStyle = col[0]; ctx.fillRect(x, y, s, s);
+        ctx.fillStyle = col[1]; ctx.fillRect(x, y, s, e); ctx.fillRect(x, y, e, s);
+        ctx.fillStyle = col[2]; ctx.fillRect(x, y + s - e, s, e); ctx.fillRect(x + s - e, y, e, s);
+        ctx.strokeStyle = 'rgba(0,0,0,.55)'; ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, y + 0.5, s - 1, s - 1);
+      };
+      var draw = function () {
+        ctx.clearRect(0, 0, W, H);
+        pieces.forEach(function (p) {
+          ctx.save(); ctx.globalAlpha = p.a; ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+          var col = COLORS[p.k];
+          p.cells.forEach(function (c) { block((c[0] - p.cx) * p.s, (c[1] - p.cy) * p.s, p.s, col); });
+          ctx.restore();
+        });
+      };
+      var frame = function (t) {
+        requestAnimationFrame(frame);
+        var dt = Math.min(0.05, (t - last) / 1000 || 0); last = t;
+        if (document.hidden) return;
+        var tet = document.getElementById('sec-tetris');
+        if (tet && !tet.classList.contains('hidden')) return;      // economiza o processador enquanto o Tetris está aberto
+        for (var i = 0; i < pieces.length; i++) {
+          var p = pieces[i]; p.y -= p.vy * dt; p.rot += p.vr * dt;
+          if (p.y < -p.s * 5) { var q = spawn(false); pieces[i] = q; }
+        }
+        draw();
+      };
+      rebuild(); draw();
+      window.addEventListener('resize', function () { rebuild(); draw(); });
+      if (!reduce) requestAnimationFrame(frame);
+    }
+
+    // ---------- tela de login ----------
+    var $ = function (id) { return document.getElementById(id); };
+    var mode = 'login';
+    function setMode(m) {
+      mode = m;
+      $('lgTitle').textContent = m === 'login' ? 'Login' : 'Criar conta';
+      $('lgSubmit').textContent = m === 'login' ? 'Entrar' : 'Registrar';
+      $('lgToggleText').textContent = m === 'login' ? 'Ainda não tem conta?' : 'Já tem uma conta?';
+      $('lgToggle').textContent = m === 'login' ? 'Criar conta' : 'Entrar';
+      $('lgPass').setAttribute('autocomplete', m === 'login' ? 'current-password' : 'new-password');
+      $('lgErr').style.display = 'none';
+    }
+    window.showLanding = function () { document.body.classList.add('landing-on'); try { sessionStorage.removeItem('arcadehub_guest'); } catch (e) {} setMode('login'); $('lgUser').value = ''; $('lgPass').value = ''; window.scrollTo(0, 0); };
+    window.hideLanding = function () { document.body.classList.remove('landing-on'); window.scrollTo(0, 0); };
+    window.landingError = function (msg) {
+      if (!document.body.classList.contains('landing-on')) return;
+      var e = $('lgErr'); e.textContent = msg; e.style.display = 'block';
+    };
+    $('lgToggle').addEventListener('click', function () { setMode(mode === 'login' ? 'register' : 'login'); });
+    $('lgGuest').addEventListener('click', function () { try { sessionStorage.setItem('arcadehub_guest', '1'); } catch (e) {} window.hideLanding(); });
+    $('lgForm').addEventListener('submit', async function (ev) {
+      ev.preventDefault();
+      $('lgErr').style.display = 'none';
+      var btn = $('lgSubmit'), label = btn.textContent;
+      if (typeof window.landingAuth !== 'function') { window.landingError('O sistema de login ainda está carregando. Tente de novo em instantes.'); return; }
+      btn.disabled = true; btn.textContent = 'Aguarde...';
+      try { await window.landingAuth(mode, $('lgUser').value, $('lgPass').value); }
+      catch (e) { window.landingError('Não foi possível entrar. Tente novamente.'); }
+      finally { btn.disabled = false; btn.textContent = label; }
+    });
+    setMode('login');
+  })();
+  </script>
+
   <!-- PWA: instalar na tela inicial + modo offline -->
   <script>
   (function () {
@@ -2774,6 +2925,7 @@
 
       const showError = (msg) => {
         if (errElem) { errElem.innerText = msg; errElem.classList.remove('hidden'); }
+        if (window.landingError) window.landingError(msg);
       };
       if (errElem) errElem.classList.add('hidden');
 
@@ -2812,6 +2964,7 @@
         updateUserUI(true);
         passInput.value = '';
         window.closeAuthModal();
+        if (window.hideLanding) window.hideLanding();
       } catch (err) {
         console.error("Erro na autenticação:", err);
         showError(FIREBASE_READY
@@ -2822,10 +2975,18 @@
       }
     };
 
+    window.landingAuth = async function(mode, nick, pass) {
+      authMode = mode;
+      document.getElementById('authNickname').value = nick;
+      document.getElementById('authPassword').value = pass;
+      await window.handleAuthSubmit({ preventDefault() {} });
+    };
+
     window.logoutUser = function() {
       window.currentUserData = null;
       localStorage.removeItem('arcadehub_uid');
       updateUserUI(false);
+      if (window.showLanding) window.showLanding();
     };
 
     function updateUserUI(isLoggedIn) {
@@ -2883,6 +3044,7 @@
     let myTetrisPlayerIndex = 0;
     let tetrisGameLoopId = null;
     let tetrisIsSolo = false;
+    let tetrisPaused = false, tetrisPauseAt = 0;
 
     const COLS = 10;
     const ROWS = 20;
@@ -3183,12 +3345,64 @@
       wrap.appendChild(overlay);
     }
 
+    function hideTetrisPause() {
+      const old = document.getElementById('tetrisPauseOverlay');
+      if (old) old.remove();
+    }
+
+    function showTetrisPause() {
+      const wrap = document.getElementById('tetrisPanelWrap');
+      if (!wrap) return;
+      hideTetrisPause();
+      const st = localTetrisState;
+      const overlay = document.createElement('div');
+      overlay.id = 'tetrisPauseOverlay';
+      overlay.className = 'absolute inset-0 flex items-center justify-center p-4 z-10';
+      overlay.style.cssText = 'position:absolute;left:0;top:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;padding:16px;z-index:10;background:rgba(6,8,13,.82)';
+      overlay.innerHTML = `
+        <div class="hud cut text-center" style="padding:20px 24px;max-width:92%;min-width:250px">
+          <div class="ttl text-lg t-y mb-3">PAUSADO</div>
+          <div class="xp mb-3"></div>
+          <div class="text-2xl t-c mb-4">PONTOS: ${Number(st.score) || 0} · LINHAS: ${Number(st.lines) || 0}</div>
+          <div class="space-y-3">
+            <button onclick="resumeTetris()" class="slot cut slot-g w-full">&#9654; CONTINUAR</button>
+            <button onclick="startTetrisSolo()" class="slot cut slot-y w-full">&#8635; REINICIAR</button>
+            <button onclick="leaveTetrisGame()" class="slot cut slot-r w-full">SAIR PARA O INÍCIO</button>
+          </div>
+          <div class="text-xl t-dim mt-3">ESC ou P também continuam</div>
+        </div>
+      `;
+      wrap.appendChild(overlay);
+    }
+
+    window.pauseTetris = function() {
+      const st = localTetrisState;
+      if (!tetrisIsSolo || tetrisPaused || st.gameOver || !st.piece) return;
+      const sec = document.getElementById('sec-tetris'), area = document.getElementById('tetrisGameArea');
+      if (!sec || sec.classList.contains('hidden') || !area || area.classList.contains('hidden')) return;
+      tetrisPaused = true;
+      tetrisPauseAt = performance.now();
+      showTetrisPause();
+    };
+
+    window.resumeTetris = function() {
+      if (!tetrisPaused) return;
+      localTetrisState.t0 += performance.now() - tetrisPauseAt;   // o cronômetro não conta o tempo parado
+      tetrisPaused = false;
+      hideTetrisPause();
+    };
+
+    // pausa sozinho ao trocar de aba ou minimizar o app (só no modo solo)
+    document.addEventListener('visibilitychange', () => { if (document.hidden) window.pauseTetris(); });
+
     function hideTetrisGameOver() {
       const old = document.getElementById('tetrisGameOverOverlay');
       if (old) old.remove();
     }
 
     function updateTetrisUIHeaders() {
+      const pb = document.getElementById('btnTetrisPause');
+      if (pb) pb.classList.toggle('hidden', !tetrisIsSolo);
       for (let i = 0; i < TETRIS_MAX; i++) {
         const nameElem = document.getElementById(`tP${i + 1}Name`);
         const scoreElem = document.getElementById(`tP${i + 1}Score`);
@@ -3217,6 +3431,7 @@
 
     function resetLocalTetris() {
       hideTetrisGameOver();
+      tetrisPaused = false; hideTetrisPause();
       localTetrisState.dropCounter = 0;
       localTetrisState.grid = createMatrix(COLS, ROWS);
       localTetrisState.score = 0;
@@ -3293,6 +3508,7 @@
     }
 
     function playerRotate() {
+      if (tetrisPaused) return;
       if (!localTetrisState.piece || localTetrisState.gameOver) return;
       const pos = localTetrisState.piece.pos.x;
       let offset = 1;
@@ -3322,6 +3538,7 @@
     }
 
     function playerDrop() {
+      if (tetrisPaused) return;
       if (localTetrisState.gameOver || !localTetrisState.piece) return;
       localTetrisState.piece.pos.y++;
       if (collide(localTetrisState.grid, localTetrisState.piece)) {
@@ -3335,6 +3552,7 @@
     }
 
     function playerHardDrop() {
+      if (tetrisPaused) return;
       if (localTetrisState.gameOver || !localTetrisState.piece) return;
       const startY = localTetrisState.piece.pos.y;
       while (!collide(localTetrisState.grid, localTetrisState.piece)) {
@@ -3360,6 +3578,7 @@
     }
 
     function playerHold() {
+      if (tetrisPaused) return;
       const st = localTetrisState;
       if (st.gameOver || !st.piece || !st.canHold) return;
       const cur = st.piece.type;
@@ -3431,7 +3650,7 @@
         const deltaTime = time - lastTime;
         lastTime = time;
 
-        if (!localTetrisState.gameOver) {
+        if (!localTetrisState.gameOver && !tetrisPaused) {
           localTetrisState.dropCounter += deltaTime;
           if (localTetrisState.dropCounter > localTetrisState.dropInterval) {
             playerDrop();
@@ -3685,13 +3904,14 @@
       panelText(c, 'SCORE', 16, 470, label, '#a9dce5');
       panelText(c, String(st.score), 16, 498, value, '#f5c04a', 90);
 
-      const el = st.t0 ? Math.max(0, (st.gameOver && st.tEnd ? st.tEnd : performance.now()) - st.t0) : 0;
+      const el = st.t0 ? Math.max(0, (st.gameOver && st.tEnd ? st.tEnd : (tetrisPaused ? tetrisPauseAt : performance.now())) - st.t0) : 0;
       const p2 = (n) => String(n).padStart(2, '0');
       panelText(c, 'TIME', nx + 4, 470, label, '#a9dce5');
       panelText(c, `${p2(Math.floor(el / 60000))}:${p2(Math.floor(el / 1000) % 60)}:${p2(Math.floor(el / 10) % 100)}`, nx + 4, 498, value, '#ffffff', W - nx - 14);
     }
 
     window.leaveTetrisGame = function() {
+      tetrisPaused = false; hideTetrisPause();
       if (tetrisGameLoopId) cancelAnimationFrame(tetrisGameLoopId);
       switchTab('hub');
     };
@@ -3702,6 +3922,8 @@
       const tetrisArea = document.getElementById('tetrisGameArea');
       if (!tetrisArea || tetrisArea.classList.contains('hidden')) return;
       if (localTetrisState.gameOver || !localTetrisState.piece) return;
+      if (tetrisIsSolo && (e.code === 'Escape' || e.code === 'KeyP')) { e.preventDefault(); if (tetrisPaused) window.resumeTetris(); else window.pauseTetris(); return; }
+      if (tetrisPaused) { if (['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', 'Space'].includes(e.code)) e.preventDefault(); return; }
       if (['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', 'Space'].includes(e.code)) e.preventDefault();
 
       if (e.code === 'ArrowLeft') {
@@ -3730,6 +3952,7 @@
     });
 
     function movePiece(dir) {
+      if (tetrisPaused) return;
       const st = localTetrisState;
       if (st.gameOver || !st.piece) return;
       st.piece.pos.x += dir;

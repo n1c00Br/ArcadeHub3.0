@@ -262,6 +262,18 @@
     .bjcards.many{gap:0}
     .bjcards.many .pcard+.pcard{margin-left:calc(-30px*var(--U))}
     .bjresult{font-size:clamp(12px,3vw,20px);text-align:center;text-shadow:3px 3px 0 #000;min-height:28px}
+    /* ===== CHAT ===== */
+    .chatlist{height:200px;overflow-y:auto;background:#12151b;border:3px solid var(--ink);padding:8px;font-size:21px;line-height:1.1;
+      box-shadow:inset 2px 2px 0 #0d0f14,inset -2px -2px 0 #3a4050;text-align:left}
+    .chatmsg{margin-bottom:4px;word-break:break-word;color:var(--txt)}
+    .chatmsg .n{color:var(--c)}
+    .chatmsg.me .n{color:var(--y)}
+    #chatFab{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:9000}
+    #chatPanel{position:fixed;right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px));width:min(360px,calc(100vw - 16px));height:min(62vh,430px);z-index:9001;
+      flex-direction:column;padding:10px;background:#2d323d}
+    .chatbadge{position:absolute;top:-9px;right:-9px;min-width:22px;height:22px;padding:0 4px;align-items:center;justify-content:center;background:#d2343c;color:#fff;
+      border:2px solid var(--ink);font-family:'Press Start 2P',monospace;font-size:9px}
+    #chatPanel input.field,.chatform input.field{font-size:16px}
     .bjopps{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;width:100%}
     .bjopp{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px;border:3px solid transparent}
     .bjopp.turn{border-color:var(--y)}
@@ -332,6 +344,14 @@
             <button onclick="openBaralho()" class="slot cut slot-c w-full"><i class="ico ico-folder"></i> ABRIR PASTA</button>
           </div>
         </div>
+        <div class="xp my-5"></div>
+        <h3 class="ttl text-xs t-c mb-3 text-center">&#128172; CHAT GERAL</h3>
+        <div id="chatHubList" class="chatlist"></div>
+        <div class="flex gap-2 mt-2 chatform">
+          <input type="text" id="chatHubInput" maxlength="200" placeholder="Faça login para conversar" autocomplete="off" class="field cut flex-grow" style="min-width:0" disabled>
+          <button id="chatHubSend" class="slot cut slot-g" disabled>ENVIAR</button>
+        </div>
+        <div id="chatHubMsg" class="text-xl t-dim text-center" style="min-height:22px"></div>
       </div>
     </section>
 
@@ -1452,6 +1472,7 @@
     };
 
     // ---------- online ----------
+    window.__trucoRoom = function () { return NET ? NET.path.replace(/^rooms\//, '').replace('/', '_') : null; };
     function leaveNet() {
       if (NET) {
         const rt = window.__rt, net = NET;
@@ -1975,6 +1996,7 @@
     };
 
     // ---------- online ----------
+    window.__bjRoom = function () { return NET ? NET.path.replace(/^rooms\//, '').replace('/', '_') : null; };
     function leaveNet() {
       if (NET) {
         const rt = window.__rt, net = NET;
@@ -2160,6 +2182,173 @@
   })();
   </script>
 
+  <!-- CHAT: geral (página inicial) e da sala (durante o jogo) -->
+  <script>
+  (function () {
+    var KEEP = 60, FETCH = 50, ROOM_MAX_AGE = 2 * 3600 * 1000, COOLDOWN = 1200, MAXLEN = 200;
+    var $ = function (id) { return document.getElementById(id); };
+    function rt() { return window.__rt && window.__rt.rdb && window.__rt.onChildAdded ? window.__rt : null; }
+    function nick() { return window.currentUserData ? window.currentUserData.nickname : null; }
+    function safeKey(s) { return String(s).replace(/[.#$\[\]\/]/g, '_'); }
+
+    // ---------- motor de um canal de chat ----------
+    function Engine(onChange) { this.msgs = []; this.unsub = null; this.path = null; this.key = null; this.err = ''; this.onChange = onChange; this.last = 0; this.startedAt = 0; }
+    Engine.prototype.start = function (key, path, maxAge) {
+      this.stop();
+      var r = rt(); if (!r) return;
+      var self = this;
+      this.key = key; this.path = path; this.err = ''; this.startedAt = Date.now();
+      var q = r.query(r.ref(r.rdb, path), r.limitToLast(FETCH));
+      this.unsub = r.onChildAdded(q, function (snap) {
+        var v = snap.val();
+        if (!v || typeof v.t !== 'string') return;
+        if (maxAge && Date.now() - (v.ts || 0) > maxAge) return;
+        self.msgs.push({ k: snap.key, n: String(v.n || '?'), t: v.t.slice(0, MAXLEN), ts: v.ts || 0 });
+        if (self.msgs.length > KEEP) self.msgs.shift();
+        self.onChange(self, v);
+      }, function () {
+        self.err = 'Sem permissão para o chat. Libere o caminho rooms/chat nas regras do Realtime Database.';
+        self.onChange(self, null);
+      });
+    };
+    Engine.prototype.stop = function () {
+      if (this.unsub) { try { this.unsub(); } catch (e) {} }
+      this.unsub = null; this.path = null; this.key = null; this.msgs = []; this.err = '';
+      this.onChange(this, null);
+    };
+    Engine.prototype.send = function (text) {
+      var r = rt(), n = nick();
+      text = String(text || '').replace(/\s+/g, ' ').trim().slice(0, MAXLEN);
+      if (!r || !n || !this.path || !text) return false;
+      var now = Date.now();
+      if (now - this.last < COOLDOWN) return 'wait';
+      this.last = now;
+      var key = String(now) + '_' + Math.random().toString(36).slice(2, 5);
+      r.set(r.ref(r.rdb, this.path + '/' + key), { n: n, t: text, ts: now }).catch(function () {});
+      return true;
+    };
+
+    // ---------- desenho ----------
+    function renderList(el, eng, emptyText) {
+      if (!el) return;
+      var stick = el.scrollTop + el.clientHeight >= el.scrollHeight - 30;
+      el.textContent = '';
+      if (eng.err) { var e = document.createElement('div'); e.className = 'chatmsg'; e.style.color = '#f0707a'; e.textContent = eng.err; el.appendChild(e); return; }
+      if (!eng.msgs.length) { var m = document.createElement('div'); m.className = 'chatmsg'; m.style.color = '#858b97'; m.textContent = emptyText; el.appendChild(m); return; }
+      var me = nick();
+      eng.msgs.forEach(function (x) {
+        var d = document.createElement('div'); d.className = 'chatmsg' + (x.n === me ? ' me' : '');
+        var s = document.createElement('span'); s.className = 'n'; s.textContent = x.n + ': ';
+        d.appendChild(s); d.appendChild(document.createTextNode(x.t)); el.appendChild(d);
+      });
+      if (stick) el.scrollTop = el.scrollHeight;
+    }
+
+    var unread = { global: 0, room: 0 }, tab = 'global', open = false;
+    var gEng, rEng;
+    function updateBadge() {
+      var b = $('chatBadge'); if (!b) return;
+      var n = unread.global + unread.room;
+      b.textContent = n > 9 ? '9+' : String(n);
+      b.style.display = n > 0 ? 'flex' : 'none';
+    }
+    function drawAll() {
+      renderList($('chatHubList'), gEng, 'Seja o primeiro a dizer olá!');
+      if ($('chatPanel')) {
+        var eng = tab === 'room' ? rEng : gEng;
+        renderList($('chatList'), eng, tab === 'room' ? 'Chat da sala: converse com quem está jogando com você.' : 'Chat geral: converse com todos os jogadores.');
+      }
+    }
+    function onChange(eng, v) {
+      var which = eng === rEng ? 'room' : 'global';
+      if (v && v.n !== nick() && (v.ts || 0) >= eng.startedAt - 2000 && !(open && tab === which)) { unread[which]++; updateBadge(); }
+      drawAll();
+    }
+    gEng = new Engine(onChange); rEng = new Engine(onChange);
+
+    function sendFrom(input, eng, msgEl) {
+      var text = input.value;
+      if (!text.trim()) return;
+      var res = eng.send(text);
+      if (res === 'wait') { if (msgEl) { msgEl.textContent = 'Calma! Espere um segundo entre as mensagens.'; setTimeout(function () { msgEl.textContent = ''; }, 1500); } return; }
+      if (res) input.value = '';
+    }
+    function wireInput(input, sendBtn, getEng, msgEl) {
+      // evita que as teclas digitadas movam as peças do Tetris
+      ['keydown', 'keyup', 'keypress'].forEach(function (ev) { input.addEventListener(ev, function (e) { e.stopPropagation(); }); });
+      input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); sendFrom(input, getEng(), msgEl); } });
+      sendBtn.addEventListener('click', function () { sendFrom(input, getEng(), msgEl); });
+    }
+
+    // ---------- chat da página inicial ----------
+    if ($('chatHubInput')) wireInput($('chatHubInput'), $('chatHubSend'), function () { return gEng; }, $('chatHubMsg'));
+
+    // ---------- botão flutuante + painel (dentro dos jogos) ----------
+    function buildWidget() {
+      var fab = document.createElement('div');
+      fab.id = 'chatFab'; fab.style.display = 'none';
+      fab.innerHTML = '<button id="chatFabBtn" class="slot cut slot-c">&#128172; CHAT</button><span id="chatBadge" class="chatbadge" style="display:none">0</span>';
+      var panel = document.createElement('div');
+      panel.id = 'chatPanel'; panel.className = 'hud cut'; panel.style.display = 'none';
+      panel.innerHTML =
+        '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px">' +
+          '<div style="display:flex;gap:8px"><button id="chatTabG" class="slot cut slot-sm slot-y">GERAL</button><button id="chatTabR" class="slot cut slot-sm">SALA</button></div>' +
+          '<button id="chatClose" class="slot cut slot-sm slot-r">X</button></div>' +
+        '<div id="chatList" class="chatlist" style="flex:1;height:auto;min-height:0"></div>' +
+        '<div style="display:flex;gap:8px;margin-top:8px"><input id="chatInput" type="text" maxlength="' + MAXLEN + '" placeholder="Mensagem..." autocomplete="off" class="field cut" style="min-width:0;flex:1 1 auto">' +
+        '<button id="chatSend" class="slot cut slot-g">&#9654;</button></div>' +
+        '<div id="chatMsg" class="text-xl t-dim" style="min-height:22px"></div>';
+      document.body.appendChild(fab); document.body.appendChild(panel);
+      function setTab(t) {
+        if (t === 'room' && !rEng.path) t = 'global';
+        tab = t; unread[t] = 0; updateBadge();
+        $('chatTabG').classList.toggle('slot-y', t === 'global'); $('chatTabR').classList.toggle('slot-y', t === 'room');
+        drawAll();
+      }
+      fab.addEventListener('click', function () { open = true; panel.style.display = 'flex'; fab.style.display = 'none'; setTab(rEng.path ? 'room' : 'global'); $('chatList').scrollTop = 1e9; });
+      $('chatClose').addEventListener('click', function () { open = false; panel.style.display = 'none'; fab.style.display = 'flex'; });
+      $('chatTabG').addEventListener('click', function () { setTab('global'); });
+      $('chatTabR').addEventListener('click', function () { setTab('room'); });
+      wireInput($('chatInput'), $('chatSend'), function () { return tab === 'room' ? rEng : gEng; }, $('chatMsg'));
+    }
+    buildWidget();
+
+    // ---------- acompanha login, página atual e sala ----------
+    function roomKey() {
+      var fns = ['__tetrisRoom', '__trucoRoom', '__bjRoom'];
+      for (var i = 0; i < fns.length; i++) { try { var k = window[fns[i]] && window[fns[i]](); if (k) return safeKey(k); } catch (e) {} }
+      return null;
+    }
+    function tick() {
+      var logged = !!nick(), r = rt();
+      var hub = $('sec-hub'), onHub = hub && !hub.classList.contains('hidden');
+      // login / logout
+      if (logged && r) { if (!gEng.path) gEng.start('global', 'rooms/chat/global', 0); }
+      else if (gEng.path) gEng.stop();
+      // sala
+      var rk = logged && r ? roomKey() : null;
+      if (rk && rEng.key !== rk) rEng.start(rk, 'rooms/chat/' + rk, ROOM_MAX_AGE);
+      else if (!rk && rEng.path) { rEng.stop(); unread.room = 0; updateBadge(); if (tab === 'room') tab = 'global'; }
+      // chat da página inicial
+      var hi = $('chatHubInput'), hs = $('chatHubSend');
+      if (hi) {
+        hi.disabled = !logged; hs.disabled = !logged;
+        hi.placeholder = logged ? 'Digite uma mensagem...' : 'Faça login para conversar';
+        if (!logged && $('chatHubList') && !$('chatHubList').dataset.empty) { $('chatHubList').textContent = ''; var d = document.createElement('div'); d.className = 'chatmsg'; d.style.color = '#858b97'; d.textContent = 'Faça login (ENTRAR / REGISTAR) para ver e enviar mensagens.'; $('chatHubList').appendChild(d); $('chatHubList').dataset.empty = '1'; }
+        if (logged) delete $('chatHubList').dataset.empty;
+      }
+      // botão flutuante: aparece fora da página inicial, para quem está logado
+      var fab = $('chatFab'), panel = $('chatPanel');
+      if (onHub && unread.global) { unread.global = 0; updateBadge(); }
+      var show = logged && !onHub;
+      if (!show) { fab.style.display = 'none'; panel.style.display = 'none'; open = false; }
+      else if (!open) fab.style.display = 'flex';
+      var tr = $('chatTabR'); if (tr) { tr.disabled = !rEng.path; tr.style.opacity = rEng.path ? '' : '.45'; }
+    }
+    setInterval(tick, 700); tick();
+  })();
+  </script>
+
   <!-- Firebase SDK Modules & Game Logic Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -2181,7 +2370,7 @@
       collection, 
       getDocs 
     } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-    import { getDatabase, ref as rtRef, set as rtSet, update as rtUpdate, remove as rtRemove, onValue as rtOnValue, runTransaction as rtTx, onDisconnect as rtOnDisc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+    import { getDatabase, ref as rtRef, set as rtSet, update as rtUpdate, remove as rtRemove, onValue as rtOnValue, runTransaction as rtTx, onDisconnect as rtOnDisc, query as rtQuery, limitToLast as rtLimitToLast, onChildAdded as rtOnChildAdded } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'arcadehub-app';
 
@@ -2210,7 +2399,7 @@
     let rdb = null;
     try { rdb = getDatabase(app); } catch (e) { console.warn('Realtime Database indisponível:', e); }
     const rtRoom = (game, code) => rtRef(rdb, 'rooms/' + game + '/' + code);
-    window.__rt = { get rdb() { return rdb; }, ref: rtRef, set: rtSet, update: rtUpdate, remove: rtRemove, onValue: rtOnValue, tx: rtTx, onDisc: rtOnDisc, ready: () => requireOnline() };
+    window.__rt = { get rdb() { return rdb; }, ref: rtRef, set: rtSet, update: rtUpdate, remove: rtRemove, onValue: rtOnValue, tx: rtTx, onDisc: rtOnDisc, query: rtQuery, limitToLast: rtLimitToLast, onChildAdded: rtOnChildAdded, ready: () => requireOnline() };
 
     // ==========================================
     // SINTETIZADOR DE EFEITOS SONOROS (WEB AUDIO API)
@@ -2690,6 +2879,7 @@
     // CYBER TETRIS MULTIPLAYER GAME LOGIC
     // ==========================================
     let tetrisRoomId = null;
+    window.__tetrisRoom = () => ((tetrisRoomId && !tetrisIsSolo) ? 'tetris_' + tetrisRoomId : null);
     let myTetrisPlayerIndex = 0;
     let tetrisGameLoopId = null;
     let tetrisIsSolo = false;

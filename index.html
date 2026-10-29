@@ -63,7 +63,7 @@
       --txt:#f1f3f7; --dim:#aab1bd;
     }
     html,body{min-height:100%}
-    html{background:#000;-webkit-tap-highlight-color:transparent}
+    html{background:#1f2329 linear-gradient(180deg,#434955 0%,#2b3039 45%,#14171c 100%) fixed;-webkit-tap-highlight-color:transparent}
     body{overscroll-behavior-y:contain;-webkit-touch-callout:none}
     button,.slot,.key{touch-action:manipulation}
     body{
@@ -268,39 +268,35 @@
     .chatmsg{margin-bottom:4px;word-break:break-word;color:var(--txt)}
     .chatmsg .n{color:var(--c)}
     .chatmsg.me .n{color:var(--y)}
-    #chatFab{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:9000}
+    #chatFab{position:fixed;left:0;top:0;width:46px;height:46px;z-index:9000;touch-action:none;-webkit-user-select:none;user-select:none}
+    #chatFabBtn.chatbubble{display:flex;align-items:center;justify-content:center;width:46px;height:46px;padding:0;margin:0;border-radius:50%;border:3px solid var(--ink);
+      background:linear-gradient(180deg,#c9eef4 0%,#6fb3c1 100%);font-size:22px;line-height:1;cursor:grab;opacity:.88;box-shadow:2px 2px 0 #000,inset 2px 2px 0 rgba(255,255,255,.6)}
+    #chatFabBtn.chatbubble:active{cursor:grabbing;opacity:1}
     #chatPanel{position:fixed;right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px));width:min(360px,calc(100vw - 16px));height:min(62vh,430px);z-index:9001;
       flex-direction:column;padding:10px;background:#2d323d}
-    .chatbadge{position:absolute;top:-9px;right:-9px;min-width:22px;height:22px;padding:0 4px;align-items:center;justify-content:center;background:#d2343c;color:#fff;
+    .chatbadge{position:absolute;top:-7px;right:-7px;min-width:22px;height:22px;padding:0 4px;align-items:center;justify-content:center;background:#d2343c;color:#fff;
       border:2px solid var(--ink);font-family:'Press Start 2P',monospace;font-size:9px}
     #chatPanel input.field,.chatform input.field{font-size:16px}
-    /* ===== FUNDO ANIMADO + TELA DE LOGIN ===== */
+    /* ===== FUNDO ANIMADO + TELA DE LOGIN (mesmo estilo do site) ===== */
     #bgCanvas{position:fixed;left:0;top:0;width:100%;height:100%;z-index:0;pointer-events:none;image-rendering:auto}
     header,main,footer{position:relative;z-index:1}
-    #landing{display:none;position:fixed;inset:0;z-index:5;overflow-y:auto;padding:24px 16px;flex-direction:column;align-items:center;justify-content:center;gap:28px;
-      -webkit-overflow-scrolling:touch;font-family:'Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif}
+    #landing{display:none;position:fixed;inset:0;z-index:5;overflow-y:auto;padding:24px 16px;flex-direction:column;align-items:center;justify-content:center;gap:26px;
+      -webkit-overflow-scrolling:touch}
     body.landing-on #landing{display:flex}
     body.landing-on header,body.landing-on main,body.landing-on footer{display:none!important}
-    .lg-logo{font-family:'Press Start 2P',monospace;font-size:clamp(22px,6vw,40px);color:#f5c04a;text-shadow:4px 4px 0 #000;letter-spacing:1px;text-align:center}
+    .lg-brand{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+    .lg-logo{font-family:'Press Start 2P',monospace;font-size:clamp(20px,6vw,38px);color:#f5c04a;text-shadow:4px 4px 0 #000;letter-spacing:1px;text-align:center}
     .lg-logo span{color:#9fd8e2}
-    .lg-card{width:min(420px,100%);box-sizing:border-box;padding:34px 30px 26px;border-radius:44px;color:#e9f1f4;margin:auto 0;
-      background:linear-gradient(90deg,#0a9a8e 0%,#2f6e86 48%,#503a7a 100%);box-shadow:0 24px 70px rgba(0,0,0,.65),inset 0 0 0 1px rgba(255,255,255,.08);
-      -webkit-user-select:text;user-select:text}
-    .lg-card h2{margin:0 0 18px;font-size:42px;font-weight:300;text-align:center;color:#dbe6ec;letter-spacing:.5px}
-    .lg-card label{display:block;margin:12px 0 6px 14px;font-size:15px;color:rgba(235,244,247,.8)}
-    .lg-card input{display:block;width:100%;box-sizing:border-box;height:48px;padding:0 22px;border:0;border-radius:999px;background:#d3d3d3;color:#1b2430;
-      font-size:17px;font-family:inherit;outline:none;-webkit-user-select:text;user-select:text;-webkit-appearance:none;appearance:none}
-    .lg-card input:focus{box-shadow:0 0 0 3px rgba(59,147,212,.75)}
-    #lgErr{display:none;margin:14px 0 0;padding:9px 14px;border-radius:16px;background:rgba(110,16,30,.55);color:#ffe0e0;font-size:14px;line-height:1.3;text-align:center}
-    .lg-btn{display:block;width:100%;height:52px;margin-top:22px;border:0;border-radius:999px;background:#3b93d4;color:#eaf4fb;font-size:22px;font-weight:700;
-      font-family:inherit;cursor:pointer;transition:filter .15s,transform .05s}
-    .lg-btn:hover{filter:brightness(1.12)} .lg-btn:active{transform:translateY(1px)} .lg-btn:disabled{opacity:.6;cursor:wait}
-    .lg-row{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:16px;font-size:15px;color:rgba(235,244,247,.85)}
-    .lg-link{background:none;border:0;padding:0;color:#bfe8ff;font:inherit;font-weight:700;text-decoration:underline;cursor:pointer}
-    .lg-guest{display:block;width:100%;height:46px;margin-top:16px;border:2px solid rgba(255,255,255,.55);border-radius:999px;background:transparent;color:#eaf4f7;
-      font-size:17px;font-family:inherit;cursor:pointer;transition:background .15s}
-    .lg-guest:hover{background:rgba(255,255,255,.14)}
-    .lg-note{margin:12px 6px 0;font-size:13px;line-height:1.35;text-align:center;color:rgba(235,244,247,.65)}
+    .lg-card{width:min(440px,100%);box-sizing:border-box;margin:auto 0}
+    .lg-card h2{text-align:center;margin:0 0 14px;font-size:clamp(12px,3.6vw,16px);line-height:1.6}
+    .lg-card label{display:block;margin:14px 0 6px;font-size:22px;line-height:1;color:var(--c)}
+    .lg-card input{box-sizing:border-box;width:100%;-webkit-user-select:text;user-select:text}
+    #lgErr{display:none;margin:14px 0 0;font-size:22px;line-height:1.1;text-align:center;color:var(--r)}
+    .lg-card .lg-main{display:block;width:100%;margin-top:18px}
+    .lg-row{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px;font-size:22px;color:var(--dim)}
+    .lg-link{background:none;border:0;padding:0;color:var(--c);font:inherit;text-decoration:underline;cursor:pointer}
+    .lg-card .lg-guest{display:block;width:100%;margin-top:14px}
+    .lg-note{margin:14px 0 0;font-size:20px;line-height:1.1;text-align:center;color:var(--dim)}
     .bjopps{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;width:100%}
     .bjopp{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px;border:3px solid transparent}
     .bjopp.turn{border-color:var(--y)}
@@ -329,26 +325,25 @@
   <script>try { if (!localStorage.getItem('arcadehub_uid') && !sessionStorage.getItem('arcadehub_guest')) document.body.classList.add('landing-on'); } catch (e) {}</script>
   <!-- TELA INICIAL: login / cadastro / entrar sem login -->
   <div id="landing">
-    <div class="lg-logo">ARCADE<span>HUB</span></div>
-    <form id="lgForm" class="lg-card" autocomplete="on">
-      <h2 id="lgTitle">Login</h2>
-      <label for="lgUser">Nome de usuário</label>
-      <input id="lgUser" name="username" type="text" autocomplete="username" autocapitalize="characters" spellcheck="false" maxlength="16" placeholder="Ex: CYBERPLAYER99">
-      <label for="lgPass">Senha</label>
-      <input id="lgPass" name="password" type="password" autocomplete="current-password" placeholder="******">
+    <div class="lg-brand"><i class="ico ico-tetro ico-lg"></i><div class="lg-logo">ARCADE<span>HUB</span></div></div>
+    <form id="lgForm" class="hud cut lg-card" autocomplete="on">
+      <h2 id="lgTitle" class="ttl t-y">ENTRAR NO ARCADEHUB</h2>
+      <div class="xp"></div>
+      <label for="lgUser">NICKNAME (nome no jogo)</label>
+      <input id="lgUser" name="username" type="text" class="field cut" autocomplete="username" autocapitalize="off" spellcheck="false" maxlength="16" placeholder="Ex: CyberPlayer99">
+      <label for="lgPass">SENHA</label>
+      <input id="lgPass" name="password" type="password" class="field cut" autocomplete="current-password" placeholder="******">
       <div id="lgErr" role="alert"></div>
-      <button type="submit" id="lgSubmit" class="lg-btn">Entrar</button>
+      <button type="submit" id="lgSubmit" class="slot cut slot-y lg-main">ENTRAR</button>
       <div class="lg-row">
         <span id="lgToggleText">Ainda não tem conta?</span>
         <button type="button" id="lgToggle" class="lg-link">Criar conta</button>
       </div>
-      <button type="button" id="lgGuest" class="lg-guest">Entrar sem login</button>
+      <button type="button" id="lgGuest" class="slot cut lg-guest">ENTRAR SEM LOGIN</button>
       <p class="lg-note">Sem login você joga solo, mas não usa o online, o chat nem o ranking.</p>
     </form>
   </div>
 
-
-  <!-- BARRA SUPERIOR -->
   <header class="px-3 pt-3 z-40">
     <div class="hud cut flex flex-wrap items-center justify-between gap-3" style="padding:10px 16px">
       <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('hub')">
@@ -2277,8 +2272,8 @@
     var mode = 'login';
     function setMode(m) {
       mode = m;
-      $('lgTitle').textContent = m === 'login' ? 'Login' : 'Criar conta';
-      $('lgSubmit').textContent = m === 'login' ? 'Entrar' : 'Registrar';
+      $('lgTitle').textContent = m === 'login' ? 'ENTRAR NO ARCADEHUB' : 'CRIAR CONTA NO ARCADEHUB';
+      $('lgSubmit').textContent = m === 'login' ? 'ENTRAR' : 'REGISTRAR';
       $('lgToggleText').textContent = m === 'login' ? 'Ainda não tem conta?' : 'Já tem uma conta?';
       $('lgToggle').textContent = m === 'login' ? 'Criar conta' : 'Entrar';
       $('lgPass').setAttribute('autocomplete', m === 'login' ? 'current-password' : 'new-password');
@@ -2297,7 +2292,7 @@
       $('lgErr').style.display = 'none';
       var btn = $('lgSubmit'), label = btn.textContent;
       if (typeof window.landingAuth !== 'function') { window.landingError('O sistema de login ainda está carregando. Tente de novo em instantes.'); return; }
-      btn.disabled = true; btn.textContent = 'Aguarde...';
+      btn.disabled = true; btn.textContent = 'AGUARDE...';
       try { await window.landingAuth(mode, $('lgUser').value, $('lgPass').value); }
       catch (e) { window.landingError('Não foi possível entrar. Tente novamente.'); }
       finally { btn.disabled = false; btn.textContent = label; }
@@ -2438,7 +2433,7 @@
     function buildWidget() {
       var fab = document.createElement('div');
       fab.id = 'chatFab'; fab.style.display = 'none';
-      fab.innerHTML = '<button id="chatFabBtn" class="slot cut slot-c">&#128172; CHAT</button><span id="chatBadge" class="chatbadge" style="display:none">0</span>';
+      fab.innerHTML = '<button id="chatFabBtn" class="chatbubble" aria-label="Abrir chat">&#128172;</button><span id="chatBadge" class="chatbadge" style="display:none">0</span>';
       var panel = document.createElement('div');
       panel.id = 'chatPanel'; panel.className = 'hud cut'; panel.style.display = 'none';
       panel.innerHTML =
@@ -2456,7 +2451,37 @@
         $('chatTabG').classList.toggle('slot-y', t === 'global'); $('chatTabR').classList.toggle('slot-y', t === 'room');
         drawAll();
       }
-      fab.addEventListener('click', function () { open = true; panel.style.display = 'flex'; fab.style.display = 'none'; setTab(rEng.path ? 'room' : 'global'); $('chatList').scrollTop = 1e9; });
+      function openPanel() { open = true; panel.style.display = 'flex'; fab.style.display = 'none'; setTab(rEng.path ? 'room' : 'global'); $('chatList').scrollTop = 1e9; }
+      // a bolha pode ser arrastada para qualquer canto, para não ficar em cima dos botões do jogo
+      var S = 46, drag = null;
+      function clampPos(x, y) { return [Math.max(4, Math.min(window.innerWidth - S - 4, x)), Math.max(4, Math.min(window.innerHeight - S - 4, y))]; }
+      function placeFab() {
+        var pos = null; try { pos = JSON.parse(localStorage.getItem('arcadehub_chatpos') || 'null'); } catch (e) {}
+        var x = pos ? pos.fx * (window.innerWidth - S) : window.innerWidth - S - 6;
+        var y = pos ? pos.fy * (window.innerHeight - S) : window.innerHeight * 0.38;
+        var c = clampPos(x, y); fab.style.left = c[0] + 'px'; fab.style.top = c[1] + 'px';
+      }
+      fab.addEventListener('pointerdown', function (e) {
+        drag = { sx: e.clientX, sy: e.clientY, ox: parseFloat(fab.style.left) || 0, oy: parseFloat(fab.style.top) || 0, moved: false, id: e.pointerId };
+        try { fab.setPointerCapture(e.pointerId); } catch (x) {}
+      });
+      fab.addEventListener('pointermove', function (e) {
+        if (!drag) return;
+        var dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
+        if (!drag.moved && Math.sqrt(dx * dx + dy * dy) > 6) drag.moved = true;
+        if (drag.moved) { var c = clampPos(drag.ox + dx, drag.oy + dy); fab.style.left = c[0] + 'px'; fab.style.top = c[1] + 'px'; e.preventDefault(); }
+      });
+      fab.addEventListener('pointerup', function () {
+        if (!drag) return;
+        var d = drag; drag = null;
+        if (d.moved) {
+          var fx = (parseFloat(fab.style.left) || 0) / Math.max(1, window.innerWidth - S), fy = (parseFloat(fab.style.top) || 0) / Math.max(1, window.innerHeight - S);
+          try { localStorage.setItem('arcadehub_chatpos', JSON.stringify({ fx: fx, fy: fy })); } catch (e) {}
+        } else openPanel();
+      });
+      fab.addEventListener('pointercancel', function () { drag = null; });
+      window.addEventListener('resize', placeFab);
+      placeFab();
       $('chatClose').addEventListener('click', function () { open = false; panel.style.display = 'none'; fab.style.display = 'flex'; });
       $('chatTabG').addEventListener('click', function () { setTab('global'); });
       $('chatTabR').addEventListener('click', function () { setTab('room'); });

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#2d323d">
+  <meta name="theme-color" content="#241a74">
   <!-- App instalável (Adicionar à tela inicial) -->
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" href="icons/icon-192.png">
@@ -323,6 +323,85 @@
     .vira .pcard{--u:calc(var(--U)*.9)}
     .vira .plate{font-size:9px;padding:3px 8px}
     .pl{z-index:2}
+      /* ===== TEMA SUPER PIXEL (estilo SNES / Game Boy, cores vivas) ===== */
+    :root{
+      --ink:#08061c; --ring:#241a74;
+      --hi:#cfc6ff; --mid:#8a7cf0; --lo:#1a1264;
+      --y:#ffd23f; --r:#ff4d6d; --c:#4fe3ff; --g:#5cf06a; --b:#5c9dff; --o:#ff9a3d; --p:#c05cff;
+      --txt:#f7f3ff; --dim:#b9b0e6;
+      --stripe:linear-gradient(90deg,#ffd23f 0 20%,#ff9a3d 20% 40%,#ff4d6d 40% 60%,#c05cff 60% 80%,#5c7dff 80% 100%);
+    }
+    html{background-color:#0b0825;background-image:radial-gradient(ellipse at 15% 0%,rgba(122,75,255,.5),transparent 55%),radial-gradient(ellipse at 100% 100%,rgba(255,77,109,.32),transparent 52%),linear-gradient(180deg,#1d1558 0%,#0e0a34 50%,#06051a 100%);background-attachment:fixed}
+    body::before{background-image:radial-gradient(ellipse at center,transparent 52%,rgba(0,0,0,.6) 100%);background-size:auto}
+    body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+      background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0,rgba(0,0,0,.22) 1px,transparent 1px,transparent 3px)}
+    .hud{background:linear-gradient(180deg,#4b40b4 0%,#352b96 55%,#271f78 100%);box-shadow:inset 3px 3px 0 var(--hi),inset -3px -3px 0 var(--lo),inset 0 0 0 6px var(--ring)}
+    header .hud{position:relative}
+    header .hud::before{content:'';position:absolute;left:0;right:0;top:0;height:7px;background:var(--stripe);z-index:2}
+    .plate{background:#1b1458;box-shadow:inset 2px 2px 0 #0a0730,inset -2px -2px 0 #6a5fd8}
+    .slot{background:linear-gradient(180deg,#f6f1ff 0%,#c2b8f6 48%,#8576de 100%);color:#1a1245;box-shadow:inset 2px 2px 0 #fff,inset -2px -2px 0 #4b3fb0}
+    .slot:active{box-shadow:inset 2px 2px 0 #4b3fb0,inset -2px -2px 0 #fff}
+    .slot-y{background:linear-gradient(180deg,#fff3a0 0%,#ffd23f 50%,#f0891a 100%);color:#3a1a00}
+    .slot-r{background:linear-gradient(180deg,#ff8a99 0%,#ff3b5c 55%,#b01a3d 100%);color:#fff;text-shadow:2px 2px 0 #4a0a1c}
+    .slot-c{background:linear-gradient(180deg,#c2f6ff 0%,#4fe3ff 55%,#1f8fd0 100%);color:#052a44}
+    .slot-g{background:linear-gradient(180deg,#c4ff94 0%,#5cf06a 55%,#1b9a4a 100%);color:#062a12}
+    .field{background:#150f48;box-shadow:inset 3px 3px 0 #080520,inset -3px -3px 0 #6a5fd8}
+    .field::placeholder{color:#8479c9}
+    .bar{background:#150f48;box-shadow:inset 0 0 0 2px #5a4fc0}
+    .bar-y .bar-fill{background:linear-gradient(180deg,#fff3a0 0%,#ffd23f 50%,#f0891a 100%)}
+    .bar-g .bar-fill{background:linear-gradient(180deg,#c4ff94 0%,#5cf06a 55%,#1b9a4a 100%)}
+    .bar-r .bar-fill{background:linear-gradient(180deg,#ff8a99 0%,#ff3b5c 55%,#b01a3d 100%)}
+    .bar-c .bar-fill{background:linear-gradient(180deg,#c2f6ff 0%,#4fe3ff 55%,#1f8fd0 100%)}
+    .xp{background:var(--stripe);box-shadow:inset 0 2px 0 rgba(255,255,255,.4)}
+    .key{background:linear-gradient(#f6f1ff,#a79cec);box-shadow:inset 2px 2px 0 #fff,inset -2px -2px 0 #4b3fb0}
+    .tbl tbody tr:nth-child(even) td{background:rgba(255,255,255,.06)}
+    .tbl td{border-bottom:2px solid #150f48}
+    .tile,.file{background:linear-gradient(180deg,#2c2288 0%,#1a1458 100%);box-shadow:inset 2px 2px 0 #0a0730,inset -2px -2px 0 #6a5fd8;position:relative;overflow:hidden}
+    .tile::before{content:'';position:absolute;left:0;right:0;top:0;height:6px;background:var(--stripe)}
+    .file::before{content:'';position:absolute;left:0;right:0;top:0;height:5px;background:var(--stripe);opacity:.9}
+    .file:hover{filter:brightness(1.2);background:linear-gradient(180deg,#3a2eb0 0%,#241a78 100%)}
+    .file.locked:hover{background:linear-gradient(180deg,#2c2288 0%,#1a1458 100%)}
+    .stat-ov{background:rgba(8,6,28,.82)}
+    .logbox div:first-child{color:var(--y)}
+    #landing .lg-card,.lg-card{box-shadow:inset 3px 3px 0 var(--hi),inset -3px -3px 0 var(--lo),inset 0 0 0 6px var(--ring)}
+
+    /* ===== MESA ESTILO BALATRO (feltro verde com ondas, baralho no canto) ===== */
+    .mesa{
+      background-color:#1d6a51;
+      background-image:
+        radial-gradient(ellipse at 22% 16%,rgba(255,255,255,.13) 0,transparent 42%),
+        radial-gradient(ellipse at 80% 74%,rgba(0,36,28,.5) 0,transparent 58%),
+        radial-gradient(circle at 50% 50%,rgba(90,215,170,.14) 0,transparent 60%),
+        repeating-radial-gradient(circle at 42% 38%,rgba(255,255,255,.04) 0 28px,rgba(0,0,0,.06) 28px 56px);
+      background-size:100% 100%,100% 100%,150% 150%,220% 220%;
+      animation:feltflow 24s ease-in-out infinite alternate;
+      border:8px solid #10302a;border-radius:18px;
+      box-shadow:inset 0 0 90px rgba(0,0,0,.55),inset 0 0 0 3px rgba(255,255,255,.07),0 8px 0 rgba(0,0,0,.45)}
+    @keyframes feltflow{0%{background-position:0 0,0 0,0% 0%,0% 0%}100%{background-position:0 0,0 0,100% 100%,100% 60%}}
+    .seat .seatname{background:#0d2a22;border-color:#06140f;box-shadow:inset 2px 2px 0 #04100b,inset -2px -2px 0 #2c6b57}
+    .shand,.pl,.bjcards,.vira{filter:drop-shadow(0 5px 0 rgba(0,0,0,.34))}
+    .bjopp.me{background:rgba(0,0,0,.22)}
+    .deckpile{position:absolute;right:calc(14px*var(--U));top:calc(10px*var(--U));width:calc(72px*var(--U));height:calc(104px*var(--U));z-index:3;pointer-events:none;filter:drop-shadow(0 5px 0 rgba(0,0,0,.4))}
+    .deckpile .pcard{--u:calc(var(--U)*.8);position:absolute;left:0;top:0}
+    .deckpile .pcard:nth-child(2){left:calc(3px*var(--U));top:calc(3px*var(--U))}
+    .deckpile .pcard:nth-child(3){left:calc(6px*var(--U));top:calc(6px*var(--U))}
+    .bjopps{padding-right:calc(78px*var(--U))}
+    @keyframes dealin{
+      0%{transform:translate(var(--dx),var(--dy)) rotate(var(--rot,-14deg)) scale(.55);opacity:0}
+      14%{opacity:1}
+      100%{transform:var(--end,none);opacity:1}}
+    .pop{position:absolute;z-index:9;pointer-events:none;font-family:'Press Start 2P',monospace;font-size:clamp(16px,4.4vw,28px);color:var(--y);
+      text-shadow:3px 3px 0 #000,-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000;white-space:nowrap;animation:popup 1.4s cubic-bezier(.2,.8,.3,1) both}
+    .pop.good{color:var(--g)} .pop.bad{color:var(--r)}
+    @keyframes popup{
+      0%{transform:translate(-50%,12px) scale(.4);opacity:0}
+      14%{transform:translate(-50%,-8px) scale(1.3);opacity:1}
+      30%{transform:translate(-50%,-12px) scale(1)}
+      100%{transform:translate(-50%,-70px) scale(1);opacity:0}}
+    .seat.s-b .shand .pcard.can:hover{filter:brightness(1.08)}
+    /* cartas maiores */
+    :root{--U:1.22}
+    @media (max-width:640px){:root{--U:.84}}
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between antialiased">
@@ -910,7 +989,7 @@
       '9': [[0, 0], [2, 0], [0, 1], [2, 1], [1, 2], [0, 3], [2, 3], [0, 4], [2, 4]],
       '10': [[0, 0], [2, 0], [1, 0.5], [0, 1], [2, 1], [0, 3], [2, 3], [1, 3.5], [0, 4], [2, 4]]
     };
-    function faceHTML(c, cls) {
+    function faceHTML(c, cls, attrs) {
       const col = (c.s === 'H' || c.s === 'D') ? 'cr' : 'cb';
       let body = '';
       if ('JQK'.indexOf(c.r) >= 0) {
@@ -926,12 +1005,40 @@
         }).join('') + '</div>';
       }
       const ix = c.r === '10' ? ' ten' : '';
-      return '<div class="pcard face ' + col + ' ' + (cls || '') + '"><div class="idx' + ix + '">' + c.r + suitSvg(c.s, 9) + '</div><div class="idx bot' + ix + '">' + c.r + suitSvg(c.s, 9) + '</div>' + body + '</div>';
+      return '<div class="pcard face ' + col + ' ' + (cls || '') + '"' + (attrs || '') + '><div class="idx' + ix + '">' + c.r + suitSvg(c.s, 9) + '</div><div class="idx bot' + ix + '">' + c.r + suitSvg(c.s, 9) + '</div>' + body + '</div>';
     }
-    function backHTML(color, cls) {
-      return '<div class="pcard pback ' + color + ' ' + (cls || '') + '"></div>';
+    function backHTML(color, cls, attrs) {
+      return '<div class="pcard pback ' + color + ' ' + (cls || '') + '"' + (attrs || '') + '></div>';
     }
-    window.__cards = { faceHTML, backHTML };
+    function deckHTML() {
+      return '<div class="deckpile">' + backHTML('red', '') + backHTML('red', '') + backHTML('red', '') + '</div>';
+    }
+
+    // Animação de cartas voando do baralho (ou da mão) até o lugar delas.
+    // Cada carta com data-born="<instante em ms>" começa a voar nesse instante. Como a mesa é redesenhada várias
+    // vezes, usamos atraso negativo para a animação continuar de onde parou, sem recomeçar.
+    const DEAL_DUR = 520, DEAL_GAP = 110;
+    function dealFx(mesa) {
+      if (!mesa) return;
+      const deck = mesa.querySelector('.deckpile');
+      const now = performance.now();
+      mesa.querySelectorAll('[data-born]').forEach((el) => {
+        const born = parseFloat(el.getAttribute('data-born'));
+        if (!isFinite(born) || now > born + DEAL_DUR) return;
+        let origin = deck;
+        const fromSel = el.getAttribute('data-from');
+        if (fromSel) origin = mesa.querySelector(fromSel) || deck;
+        if (!origin) return;
+        const o = origin.getBoundingClientRect(), r = el.getBoundingClientRect();
+        const cs = getComputedStyle(el);
+        el.style.setProperty('--dx', (o.left + o.width / 2 - (r.left + r.width / 2)).toFixed(1) + 'px');
+        el.style.setProperty('--dy', (o.top + o.height / 2 - (r.top + r.height / 2)).toFixed(1) + 'px');
+        el.style.setProperty('--end', cs.transform === 'none' ? 'none' : cs.transform);
+        el.style.setProperty('--rot', (((Math.floor(born) % 9) - 4) * 4) + 'deg');
+        el.style.animation = 'dealin ' + DEAL_DUR + 'ms cubic-bezier(.2,.8,.25,1) ' + (born - now).toFixed(0) + 'ms backwards';
+      });
+    }
+    window.__cards = { faceHTML, backHTML, deckHTML, dealFx, DEAL_DUR, DEAL_GAP };
 
     // ---------- estado ----------
     let G = null, GID = 0;                       // motor (só no jogo local ou no host)
@@ -1022,11 +1129,11 @@
       const sn = VIEW.seen, H = P.hand;
       if (!H) return;
       if (!sn.acc) sn.acc = { rounds: 0, zaps: 0 };
-      if (sn.hid !== H.hid) { sn.hid = H.hid; sn.rounds = 0; sn.banner = false; sfx.deal(); }
+      if (sn.hid !== H.hid) { sn.hid = H.hid; sn.rounds = 0; sn.banner = false; sn.dealStart = performance.now(); sn.playBorn = {}; for (let k = 0; k < Math.min(14, P.n * 3); k++) setTimeout(() => sfx.play(), k * 110); }
       if (P.lastPlay && P.lastPlay.seq !== sn.play) { sn.play = P.lastPlay.seq; sn.dropSeat = P.lastPlay.seat; sfx.play(); if (P.lastPlay.seat === VIEW.mySeat && isZapCard(H.table[P.lastPlay.seat], P)) sn.acc.zaps++; } else sn.dropSeat = -1;
       if (P.bubble && P.bubble.s !== sn.bub) { sn.bub = P.bubble.s; if (/!$/.test(P.bubble.t) && P.bubble.t !== 'ZAP!') sfx.truco(); }
       if (H.results.length > sn.rounds) { for (let i = sn.rounds; i < H.results.length; i++) if (H.results[i] === VIEW.mySeat % 2) sn.acc.rounds++; sn.rounds = H.results.length; sfx.round(); }
-      if (H.banner && !sn.banner) { sn.banner = true; (H.banner.team === VIEW.mySeat % 2) ? sfx.win() : sfx.lose(); if (sn.acc.rounds || sn.acc.zaps) { recStats({ rounds: sn.acc.rounds, zaps: sn.acc.zaps }); sn.acc = { rounds: 0, zaps: 0 }; } }
+      if (H.banner && !sn.banner) { sn.banner = true; sn.bannerAt = performance.now(); (H.banner.team === VIEW.mySeat % 2) ? sfx.win() : sfx.lose(); if (sn.acc.rounds || sn.acc.zaps) { recStats({ rounds: sn.acc.rounds, zaps: sn.acc.zaps }); sn.acc = { rounds: 0, zaps: 0 }; } }
       if (P.final && !sn.final) { sn.final = true; const won = P.final.team === VIEW.mySeat % 2; won ? sfx.win() : sfx.lose(); recStats(won ? { wins: 1 } : { losses: 1 }); }
       if (!P.final) sn.final = false;
     }
@@ -1052,30 +1159,41 @@
 
       const myTurn = !H.over && !P.final && P.waitSeat === my && !P.ask && !H.pending && H.table[my] === null && H.turn === my;
       const posOf = (s) => { const rel = (s - my + n) % n; return n === 2 ? (rel === 0 ? 'b' : 't') : ['b', 'l', 't', 'r'][rel]; };
-      let html = '';
+      const sn = VIEW.seen, now = performance.now(), GAP = DEAL_GAP, DUR = DEAL_DUR;
+      const dealing = sn.dealStart !== undefined && now < sn.dealStart + n * 3 * GAP + DUR + 60;
+      const dealAttr = (order) => (dealing ? ' data-born="' + (sn.dealStart + order * GAP) + '"' : '');
+      let html = deckHTML();
       for (let s = n - 1; s >= 0; s--) {
-        const pos = posOf(s), turn = !H.over && H.turn === s && !H.pending;
+        const pos = posOf(s), turn = !H.over && H.turn === s && !H.pending, rel = (s - my + n) % n;
         const nameP = '<div class="plate ttl seatname">' + seatLabel(s) + '</div>';
         if (s === my) {
           const blind = H.special === 'ferro';
           html += '<div class="seat s-b hand-me' + (turn ? ' turn' : '') + '"><div class="shand">' +
-            VIEW.myHand.map((c, i) => '<div data-idx="' + i + '" data-act="card">' + (blind ? backHTML('red', myTurn ? 'can' : 'dim') : faceHTML(c, myTurn ? 'can' : 'dim')) + '</div>').join('') +
+            VIEW.myHand.map((c, i) => '<div data-idx="' + i + '" data-act="card">' + (blind ? backHTML('red', myTurn ? 'can' : 'dim', dealAttr(i * n + rel)) : faceHTML(c, myTurn ? 'can' : 'dim', dealAttr(i * n + rel))) + '</div>').join('') +
             '</div>' + nameP + '</div>';
         } else {
           const showFace = H.reveal && H.reveal.to === my && H.reveal.from === s;
-          const cards = showFace ? H.reveal.cards.map((c) => faceHTML(c)).join('') : new Array(H.counts[s]).fill(0).map(() => backHTML('blue')).join('');
+          const cards = showFace ? H.reveal.cards.map((c) => faceHTML(c)).join('') : new Array(H.counts[s]).fill(0).map((_, i) => backHTML('blue', '', dealAttr(i * n + rel))).join('');
           html += '<div class="seat s-' + pos + ' mini' + (turn ? ' turn' : '') + '">' + nameP + '<div class="shand">' + cards + '</div></div>';
         }
       }
       html += '<div class="zone">';
-      if (H.vira) html += '<div class="vira">' + faceHTML(H.vira, '') + '<div class="plate ttl">VIRA</div></div>';
+      if (H.vira) html += '<div class="vira">' + faceHTML(H.vira, '', dealAttr(3 * n)) + '<div class="plate ttl">VIRA</div></div>';
+      sn.playBorn = sn.playBorn || {};
       for (let s = 0; s < n; s++) {
         const c = H.table[s];
         if (!c) continue;
-        const cls = (VIEW.seen.dropSeat === s ? 'drop ' : '') + (H.winSeat === s ? 'win' : '');
-        html += '<div class="pl pl-' + posOf(s) + '">' + faceHTML(c, cls) + '</div>';
+        const key = H.hid + '-' + c.r + c.s;
+        if (sn.playBorn[key] === undefined) sn.playBorn[key] = now;
+        const born = sn.playBorn[key];
+        const fly = (now - born < DUR + 60) ? ' data-born="' + born + '" data-from=".seat.s-' + posOf(s) + ' .shand"' : '';
+        html += '<div class="pl pl-' + posOf(s) + '">' + faceHTML(c, H.winSeat === s ? 'win' : '', fly) + '</div>';
       }
       html += '</div>';
+      if (H.banner && sn.bannerAt !== undefined && now - sn.bannerAt < 1500) {
+        const mineB = H.banner.team === myTeam;
+        html += '<div class="pop ' + (mineB ? 'good' : 'bad') + '" style="left:50%;top:30%;animation-delay:-' + Math.round(now - sn.bannerAt) + 'ms">+' + H.banner.pts + '</div>';
+      }
       if (H.banner && !P.final) {
         const mine = H.banner.team === myTeam;
         html += '<div class="ov" data-act="skip"><div class="ttl ' + (mine ? 't-g' : 't-r') + '" style="font-size:clamp(14px,3.5vw,24px)">' + (mine ? 'MÃO NOSSA! +' : 'MÃO DELES +') + H.banner.pts + '</div>' +
@@ -1092,6 +1210,7 @@
       }
       if (P.bubble) html += '<div class="bubble">' + P.bubble.t + '</div>';
       $('trMesa').innerHTML = html;
+      dealFx($('trMesa'));
 
       // status
       let st;
@@ -1208,6 +1327,8 @@
       if (dealt.vira) say('Vira: ' + dealt.vira.r + SYM[dealt.vira.s] + ' \u2192 manilha é o ' + manilhaRank(dealt.vira.r) + '.');
       say('{S:' + starter + '} começa a mão.');
       render();
+      await sleep(G.n * 3 * 110 + 700);
+      if (!alive(id)) return;
       if (special === 'ferro') {
         say('MÃO DE FERRO! Cartas às cegas, vale 1 ponto e decide o jogo.');
         bubble('MÃO DE FERRO!');
@@ -1806,7 +1927,7 @@
       if (sn.cards !== undefined && cnt > sn.cards) sfx.card();
       sn.cards = cnt;
       if (P.phase === 'result' && sn.rid !== P.rid) {
-        sn.rid = P.rid;
+        sn.rid = P.rid; sn.resultAt = performance.now();
         sfx.flip();
         if (me && me.active && !P.result.voided) {
           if (P.result.winner === VIEW.mySeat) { sfx.win(); recBJ({ wins: 1, twentyones: me.total === 21 ? 1 : 0 }); }
@@ -1815,14 +1936,21 @@
       }
     }
 
+    // instante em que cada carta apareceu pela primeira vez (para ela voar do baralho até o lugar)
+    function bornAttr(P, key) {
+      const sn = VIEW.seen, now = performance.now();
+      sn.born = sn.born || {};
+      const k = P.rid + ':' + key;
+      if (sn.born[k] === undefined) sn.born[k] = now;
+      return (now - sn.born[k] < C().DEAL_DUR + 60) ? ' data-born="' + sn.born[k] + '"' : '';
+    }
+
     function oppHTML(P, s) {
       const p = P.players[s], cs = C();
       const turn = P.phase === 'play' && P.turn === s;
-      const key = 'o' + s, seen = VIEW.seen[key] || 0;
       let cards = '';
-      if (P.reveal && p.cards) cards = p.cards.map((c, i) => cs.faceHTML(c, i >= seen && seen > 0 ? 'drop' : '')).join('');
-      else if (p.count > 0) cards = cs.faceHTML(p.up, '') + new Array(p.count - 1).fill(0).map((_, i) => cs.backHTML('blue', i + 1 >= seen && seen > 0 ? 'drop' : '')).join('');
-      VIEW.seen[key] = p.count;
+      if (P.reveal && p.cards) cards = p.cards.map((c, i) => cs.faceHTML(c, '', bornAttr(P, 'o' + s + '_' + i))).join('');
+      else if (p.count > 0) cards = cs.faceHTML(p.up, '', bornAttr(P, 'o' + s + '_0')) + new Array(p.count - 1).fill(0).map((_, i) => cs.backHTML('blue', '', bornAttr(P, 'o' + s + '_' + (i + 1)))).join('');
       let info;
       if (P.phase === 'result' && p.active && p.total !== null) {
         const win = !P.result.voided && P.result.winner === s;
@@ -1844,7 +1972,7 @@
       // adversários (a partir do próximo assento depois de você)
       const opps = [];
       for (let k = 1; k < P.n; k++) { const s = (my + k) % P.n; if (P.players[s].present) opps.push(s); }
-      let html = '<div class="bjopps">' + opps.map((s) => oppHTML(P, s)).join('') + '</div>';
+      let html = cs.deckHTML() + '<div class="bjopps">' + opps.map((s) => oppHTML(P, s)).join('') + '</div>';
 
       // faixa central
       let banner = '';
@@ -1861,9 +1989,7 @@
       html += '<div class="bjresult ttl">' + (banner || '&nbsp;') + '</div>';
 
       // suas cartas
-      const mySeen = VIEW.seen.me || 0;
-      const myCards = VIEW.myCards.map((c, i) => cs.faceHTML(c, i >= mySeen && mySeen > 0 ? 'drop' : '')).join('');
-      VIEW.seen.me = VIEW.myCards.length;
+      const myCards = VIEW.myCards.map((c, i) => cs.faceHTML(c, '', bornAttr(P, 'me_' + i))).join('');
       const mt = total(VIEW.myCards);
       let myInfo = '';
       if (VIEW.myCards.length) {
@@ -1876,7 +2002,12 @@
         '<div class="plate ttl seatname">' + seatLabel(P, my) + (me.stood ? ' &bull; PAROU' : '') + '</div>' +
         '<div class="bjinfo ttl">' + myInfo + '</div>' +
         '<div class="text-xl t-dim" style="text-align:center">A 1ª carta é vista por todos. As outras só por você, até o fim.</div></div>';
+      if (P.phase === 'result' && VIEW.seen.resultAt !== undefined && performance.now() - VIEW.seen.resultAt < 1500 && !P.result.voided) {
+        const won = P.result.winner === my;
+        html += '<div class="pop ' + (won ? 'good' : 'bad') + '" style="left:50%;top:46%;animation-delay:-' + Math.round(performance.now() - VIEW.seen.resultAt) + 'ms">' + (won ? 'VITÓRIA!' : seatLabel(P, P.result.winner) + ' VENCEU') + '</div>';
+      }
       $('bjMesa').innerHTML = html;
+      cs.dealFx($('bjMesa'));
 
       // status + ações
       let st = { play: 'EM JOGO', result: 'FIM DA PARTIDA', over: 'FIM DE JOGO' }[P.phase];
@@ -2208,35 +2339,50 @@
   <!-- FUNDO ANIMADO (peças de Tetris subindo) + TELA DE LOGIN -->
   <script>
   (function () {
-    // ---------- fundo animado ----------
+    // ---------- fundo animado: peças de Tetris + botões de controle (X, O, A, B) e direcional ----------
     var cv = document.createElement('canvas'); cv.id = 'bgCanvas';
     document.body.insertBefore(cv, document.body.firstChild);
     var ctx = cv.getContext('2d');
     if (ctx) {
+      var INK = '#08061c';
       var SHAPES = {
         I: [[0, 0], [1, 0], [2, 0], [3, 0]], O: [[0, 0], [1, 0], [0, 1], [1, 1]], T: [[0, 0], [1, 0], [2, 0], [1, 1]],
         S: [[1, 0], [2, 0], [0, 1], [1, 1]], Z: [[0, 0], [1, 0], [1, 1], [2, 1]], J: [[0, 0], [0, 1], [1, 1], [2, 1]], L: [[2, 0], [0, 1], [1, 1], [2, 1]]
       };
-      var COLORS = {   // base, claro, escuro
-        I: ['#2dc6d8', '#a7e7ef', '#136b76'], O: ['#ffc52a', '#ffe7a5', '#8c6b11'], T: ['#a45bd9', '#d9b0f2', '#5e2a8c'],
-        S: ['#84d52c', '#cbeda6', '#457412'], Z: ['#e93f45', '#f6aeb1', '#801d20'], J: ['#2f8be8', '#9cc6f6', '#1a4d8c'], L: ['#ff8a1d', '#ffc88a', '#a35208']
+      var COLORS = {   // base, claro, escuro (mesma paleta viva do Tetris)
+        I: ['#2de2ff', '#b5f6ff', '#0f7f98'], O: ['#ffd23f', '#fff0a8', '#a8780a'], T: ['#b45cff', '#e1bcff', '#63259c'],
+        S: ['#5cf06a', '#c9ffcf', '#1b8a38'], Z: ['#ff4d6d', '#ffb3c0', '#9c1436'], J: ['#4d8dff', '#b4d0ff', '#1a3f94'], L: ['#ff9a3d', '#ffd2a3', '#a85408']
       };
-      var KEYS = Object.keys(SHAPES), W = 0, H = 0, dpr = 1, pieces = [], last = 0;
+      // botões de controle (estilo SNES): letra em bitmap 3x5
+      var GLYPH = {
+        A: ['.#.', '#.#', '###', '#.#', '#.#'], B: ['##.', '#.#', '##.', '#.#', '##.'],
+        X: ['#.#', '#.#', '.#.', '#.#', '#.#'], O: ['.#.', '#.#', '#.#', '#.#', '.#.']
+      };
+      var BTN = { A: ['#ff4d6d', '#ffc0cb', '#a3173a'], B: ['#ffd23f', '#fff3b0', '#b07d08'], X: ['#4d8dff', '#bcd5ff', '#1d46a0'], O: ['#5cf06a', '#cdffd2', '#1b8f3a'] };
+      var BTN_KEYS = ['A', 'B', 'X', 'O'];
+      var KEYS = Object.keys(SHAPES), W = 0, H = 0, dpr = 1, pieces = [], lastDraw = 0;
       var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       var spawn = function (initial) {
-        var k = KEYS[(Math.random() * KEYS.length) | 0], cells = SHAPES[k], s = 10 + Math.random() * 26, d = (s - 10) / 26;
-        var mx = 0, my = 0; cells.forEach(function (c) { if (c[0] > mx) mx = c[0]; if (c[1] > my) my = c[1]; });
-        return {
-          k: k, cells: cells, s: s, cx: (mx + 1) / 2, cy: (my + 1) / 2, x: Math.random() * W,
-          y: initial ? Math.random() * (H + 200) : H + s * 5 + Math.random() * H * 0.35,
-          rot: Math.random() * 6.283, vr: (Math.random() - 0.5) * 0.7, vy: 16 + d * 62 + Math.random() * 10, a: 0.3 + d * 0.5
+        var r = Math.random(), s = 10 + Math.random() * 26, d = (s - 10) / 26;
+        var base = {
+          s: s, x: Math.random() * W, y: initial ? Math.random() * (H + 200) : H + s * 6 + Math.random() * H * 0.35,
+          vy: 16 + d * 62 + Math.random() * 10, a: 0.32 + d * 0.5
         };
+        if (r < 0.3) {                       // botão de controle ou direcional
+          var kind = Math.random() < 0.2 ? 'dpad' : BTN_KEYS[(Math.random() * 4) | 0];
+          base.kind = kind; base.rot = (Math.random() - 0.5) * 0.6; base.vr = (Math.random() - 0.5) * 0.12; base.sym = true;
+          return base;
+        }
+        var k = KEYS[(Math.random() * KEYS.length) | 0], cells = SHAPES[k];
+        var mx = 0, my = 0; cells.forEach(function (c) { if (c[0] > mx) mx = c[0]; if (c[1] > my) my = c[1]; });
+        base.k = k; base.cells = cells; base.cx = (mx + 1) / 2; base.cy = (my + 1) / 2; base.rot = Math.random() * 6.283; base.vr = (Math.random() - 0.5) * 0.7;
+        return base;
       };
       var rebuild = function () {
         dpr = Math.min(window.devicePixelRatio || 1, 2); W = window.innerWidth; H = window.innerHeight;
         cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        var n = Math.max(18, Math.min(56, Math.round(W * H / 24000)));
+        var n = Math.max(20, Math.min(60, Math.round(W * H / 22000)));
         pieces = []; for (var i = 0; i < n; i++) pieces.push(spawn(true));
         pieces.sort(function (a, b) { return a.s - b.s; });   // as pequenas (longe) ficam atrás
       };
@@ -2247,24 +2393,54 @@
         ctx.fillStyle = col[2]; ctx.fillRect(x, y + s - e, s, e); ctx.fillRect(x + s - e, y, e, s);
         ctx.strokeStyle = 'rgba(0,0,0,.55)'; ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, y + 0.5, s - 1, s - 1);
       };
+      // botão redondo em pixel art (9x9) com letra
+      var drawButton = function (kind, u) {
+        var col = BTN[kind], g = GLYPH[kind], N = 9, c = 4, x, y, d;
+        for (y = 0; y < N; y++) for (x = 0; x < N; x++) {
+          d = Math.sqrt((x - c) * (x - c) + (y - c) * (y - c));
+          if (d > 4.45) continue;
+          var px = (x - c - 0.5) * u, py = (y - c - 0.5) * u;
+          if (d > 3.55) ctx.fillStyle = INK;
+          else if (d > 2.7 && x + y < 7) ctx.fillStyle = col[1];
+          else if (d > 2.7 && x + y > 9) ctx.fillStyle = col[2];
+          else ctx.fillStyle = col[0];
+          ctx.fillRect(Math.round(px), Math.round(py), Math.ceil(u), Math.ceil(u));
+        }
+        ctx.fillStyle = INK;
+        for (y = 0; y < 5; y++) for (x = 0; x < 3; x++) if (g[y][x] === '#') ctx.fillRect(Math.round((x - 1 - 0.5 + 0) * u - u * 0.0), Math.round((y - 2 - 0.5) * u), Math.ceil(u), Math.ceil(u));
+      };
+      // direcional (cruz) em pixel art
+      var drawDpad = function (u) {
+        var N = 9, x, y;
+        for (y = 0; y < N; y++) for (x = 0; x < N; x++) {
+          var arm = (x >= 3 && x <= 5) || (y >= 3 && y <= 5);
+          if (!arm) continue;
+          var edge = x === 0 || y === 0 || x === N - 1 || y === N - 1 || (x < 3 && (y === 3 || y === 5)) || (x > 5 && (y === 3 || y === 5)) || (y < 3 && (x === 3 || x === 5)) || (y > 5 && (x === 3 || x === 5));
+          ctx.fillStyle = edge ? INK : ((x + y < 7) ? '#e6e9fb' : ((x + y > 9) ? '#7f86b5' : '#bfc4e6'));
+          if (x === 4 && y === 4) ctx.fillStyle = '#5b6194';
+          ctx.fillRect(Math.round((x - 4.5) * u), Math.round((y - 4.5) * u), Math.ceil(u), Math.ceil(u));
+        }
+      };
       var draw = function () {
         ctx.clearRect(0, 0, W, H);
         pieces.forEach(function (p) {
           ctx.save(); ctx.globalAlpha = p.a; ctx.translate(p.x, p.y); ctx.rotate(p.rot);
-          var col = COLORS[p.k];
-          p.cells.forEach(function (c) { block((c[0] - p.cx) * p.s, (c[1] - p.cy) * p.s, p.s, col); });
+          if (p.sym) { var u = p.s / 3.2; if (p.kind === 'dpad') drawDpad(u); else drawButton(p.kind, u); }
+          else { var col = COLORS[p.k]; p.cells.forEach(function (c) { block((c[0] - p.cx) * p.s, (c[1] - p.cy) * p.s, p.s, col); }); }
           ctx.restore();
         });
       };
       var frame = function (t) {
         requestAnimationFrame(frame);
-        var dt = Math.min(0.05, (t - last) / 1000 || 0); last = t;
-        if (document.hidden) return;
+        if (document.hidden) { lastDraw = t; return; }
+        // o fundo continua animado durante o Tetris, só que a 30 quadros por segundo para não pesar no jogo
         var tet = document.getElementById('sec-tetris');
-        if (tet && !tet.classList.contains('hidden')) return;      // economiza o processador enquanto o Tetris está aberto
+        var minGap = (tet && !tet.classList.contains('hidden')) ? 33 : 0;
+        if (t - lastDraw < minGap) return;
+        var dt = Math.min(0.05, (t - lastDraw) / 1000 || 0); lastDraw = t;
         for (var i = 0; i < pieces.length; i++) {
           var p = pieces[i]; p.y -= p.vy * dt; p.rot += p.vr * dt;
-          if (p.y < -p.s * 5) { var q = spawn(false); pieces[i] = q; }
+          if (p.y < -p.s * 6) pieces[i] = spawn(false);
         }
         draw();
       };
@@ -3094,13 +3270,13 @@
 
     const COLORS = [
       null,
-      '#22c3d6',
-      '#ffc21f',
-      '#a45bd9',
-      '#7ed321',
-      '#e8353b',
-      '#2f8be8',
-      '#ff8a1d'
+      '#2de2ff',
+      '#ffd23f',
+      '#b45cff',
+      '#5cf06a',
+      '#ff4d6d',
+      '#4d8dff',
+      '#ff9a3d'
     ];
 
     let localTetrisState = {
@@ -3574,7 +3750,8 @@
       localTetrisState.piece.pos.y++;
       if (collide(localTetrisState.grid, localTetrisState.piece)) {
         localTetrisState.piece.pos.y--;
-        merge(localTetrisState.grid, localTetrisState.piece);
+        addLockFx(localTetrisState);
+      merge(localTetrisState.grid, localTetrisState.piece);
         clearLines();
         spawnTetrisPiece();
         syncTetrisToFirebase();
@@ -3602,6 +3779,7 @@
       };
 
       soundFx.drop();
+      addLockFx(localTetrisState);
       merge(localTetrisState.grid, localTetrisState.piece);
       clearLines();
       spawnTetrisPiece();
@@ -3628,10 +3806,12 @@
 
     function clearLines() {
       let lines = 0;
+      const cleared = [];
       outer: for (let y = localTetrisState.grid.length - 1; y >= 0; --y) {
         for (let x = 0; x < localTetrisState.grid[y].length; ++x) {
           if (localTetrisState.grid[y][x] === 0) continue outer;
         }
+        cleared.push({ y: y - cleared.length, cells: localTetrisState.grid[y].slice() });
         const row = localTetrisState.grid.splice(y, 1)[0].fill(0);
         localTetrisState.grid.unshift(row);
         ++y;
@@ -3649,7 +3829,9 @@
         soundFx.clearLines(lines);
         st.score += basePoints;
         st.lines += lines;
+        const prevLevel = st.level;
         st.level = 1 + Math.floor(st.lines / 10);
+        spawnClearFx(st, cleared, lines, basePoints, st.level > prevLevel);
         st.dropInterval = Math.max(80, 1000 - (st.level - 1) * 85);
         playersScores[myTetrisPlayerIndex] = localTetrisState.score;
 
@@ -3755,7 +3937,7 @@
 
     function drawTetrisBoardBg(ctx, w, h) {
       const bg = ctx.createLinearGradient(0, 0, 0, h);
-      bg.addColorStop(0, '#0a0f2c'); bg.addColorStop(1, '#16215e');
+      bg.addColorStop(0, '#140a44'); bg.addColorStop(1, '#2a1b7c');
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, w, h);
       ctx.fillStyle = 'rgba(255,255,255,0.05)';
@@ -3778,42 +3960,42 @@
     function pxFrame(c, x, y, w, h) {
       c.fillStyle = '#06080d'; c.fillRect(x, y, w, h);
       const g = c.createLinearGradient(0, y, 0, y + h);
-      g.addColorStop(0, '#464c59'); g.addColorStop(1, '#323742');
+      g.addColorStop(0, '#4f43c0'); g.addColorStop(1, '#2d2488');
       c.fillStyle = g; c.fillRect(x + 3, y + 3, w - 6, h - 6);
-      c.fillStyle = '#1f232c';
+      c.fillStyle = '#1a1260';
       c.fillRect(x + 6, y + 6, w - 12, 3); c.fillRect(x + 6, y + h - 9, w - 12, 3);
       c.fillRect(x + 6, y + 6, 3, h - 12); c.fillRect(x + w - 9, y + 6, 3, h - 12);
-      c.fillStyle = '#dfe3ea'; c.fillRect(x + 3, y + 3, w - 6, 3); c.fillRect(x + 3, y + 3, 3, h - 6);
-      c.fillStyle = '#585e69'; c.fillRect(x + 3, y + h - 6, w - 6, 3); c.fillRect(x + w - 6, y + 3, 3, h - 6);
+      c.fillStyle = '#d5ccff'; c.fillRect(x + 3, y + 3, w - 6, 3); c.fillRect(x + 3, y + 3, 3, h - 6);
+      c.fillStyle = '#2a1f86'; c.fillRect(x + 3, y + h - 6, w - 6, 3); c.fillRect(x + w - 6, y + 3, 3, h - 6);
     }
 
     function pxSlot(c, x, y, w, h) {
       c.fillStyle = '#06080d'; c.fillRect(x, y, w, h);
       const g = c.createLinearGradient(0, y, 0, y + h);
-      g.addColorStop(0, '#f0f2f5'); g.addColorStop(1, '#a7acb6');
+      g.addColorStop(0, '#f1ecff'); g.addColorStop(1, '#9f94e6');
       c.fillStyle = g; c.fillRect(x + 3, y + 3, w - 6, h - 6);
       c.fillStyle = '#ffffff'; c.fillRect(x + 3, y + 3, w - 6, 2); c.fillRect(x + 3, y + 3, 2, h - 6);
-      c.fillStyle = '#626874'; c.fillRect(x + 3, y + h - 5, w - 6, 2); c.fillRect(x + w - 5, y + 3, 2, h - 6);
+      c.fillStyle = '#5a4fc0'; c.fillRect(x + 3, y + h - 5, w - 6, 2); c.fillRect(x + w - 5, y + 3, 2, h - 6);
       const g2 = c.createLinearGradient(0, y + 7, 0, y + h - 7);
-      g2.addColorStop(0, '#8e939d'); g2.addColorStop(1, '#5d626c');
+      g2.addColorStop(0, '#2d2477'); g2.addColorStop(1, '#1a1452');
       c.fillStyle = g2; c.fillRect(x + 7, y + 7, w - 14, h - 14);
-      c.fillStyle = '#474c56'; c.fillRect(x + 7, y + 7, w - 14, 2); c.fillRect(x + 7, y + 7, 2, h - 14);
+      c.fillStyle = '#120c3a'; c.fillRect(x + 7, y + 7, w - 14, 2); c.fillRect(x + 7, y + 7, 2, h - 14);
     }
 
     function pxKey(c, x, y, w, h, letter) {
       c.fillStyle = '#06080d'; c.fillRect(x, y, w, h);
       const g = c.createLinearGradient(0, y, 0, y + h);
-      g.addColorStop(0, '#e6e9ee'); g.addColorStop(1, '#9ba1ad');
+      g.addColorStop(0, '#f1ecff'); g.addColorStop(1, '#a79cec');
       c.fillStyle = g; c.fillRect(x + 3, y + 3, w - 6, h - 6);
       c.fillStyle = '#ffffff'; c.fillRect(x + 3, y + 3, w - 6, 2); c.fillRect(x + 3, y + 3, 2, h - 6);
-      c.fillStyle = '#626874'; c.fillRect(x + 3, y + h - 5, w - 6, 2); c.fillRect(x + w - 5, y + 3, 2, h - 6);
+      c.fillStyle = '#5a4fc0'; c.fillRect(x + 3, y + h - 5, w - 6, 2); c.fillRect(x + w - 5, y + 3, 2, h - 6);
       c.font = '11px "Press Start 2P", monospace'; c.textAlign = 'center'; c.fillStyle = '#1a1d25';
       c.fillText(letter, x + w / 2 + 1, y + h / 2 + 4);
     }
 
     function pxBar(c, x, y, w, h, segs, filled, col) {
       c.fillStyle = '#06080d'; c.fillRect(x, y, w, h);
-      c.fillStyle = '#252932'; c.fillRect(x + 3, y + 3, w - 6, h - 6);
+      c.fillStyle = '#150f48'; c.fillRect(x + 3, y + 3, w - 6, h - 6);
       const iw = w - 6, sw = iw / segs;
       for (let i = 0; i < segs; i++) {
         const sx = Math.round(x + 3 + i * sw), ex = Math.round(x + 3 + (i + 1) * sw);
@@ -3851,6 +4033,93 @@
       ctx.fillStyle = color; ctx.fillText(text, x, y);
     }
 
+    // ----- efeitos visuais do Tetris (só enfeite: não mudam as regras) -----
+    function tfx(st) { return st.fx || (st.fx = { parts: [], flashes: [], lock: [], pops: [], banner: null, levelUp: 0, frame: 0 }); }
+
+    function addLockFx(st) {
+      const p = st.piece;
+      if (!p) return;
+      const cells = [];
+      p.matrix.forEach((r, y) => r.forEach((v, x) => { if (v) cells.push([x + p.pos.x, y + p.pos.y]); }));
+      tfx(st).lock.push({ cells, t: 12 });
+    }
+
+    function spawnClearFx(st, rows, lines, points, leveledUp) {
+      const fx = tfx(st);
+      rows.forEach((rd) => {
+        rd.cells.forEach((type, x) => {
+          const n = lines >= 4 ? 4 : 2;
+          for (let i = 0; i < n; i++) {
+            fx.parts.push({
+              x: x + 0.5, y: rd.y + 0.5, vx: (Math.random() - 0.5) * 0.34, vy: -(0.06 + Math.random() * 0.3), g: 0.022,
+              life: 34 + Math.random() * 28, max: 62, size: 0.14 + Math.random() * 0.2, col: COLORS[type] || '#ffffff'
+            });
+          }
+        });
+        fx.flashes.push({ y: rd.y, t: 14 });
+      });
+      fx.pops.push({ text: '+' + points, y: rows[0].y, t: 58, col: '#ffd23f' });
+      if (lines >= 4) fx.banner = { text: 'TETRIS!', t: 74 };
+      else if (lines === 3) fx.banner = { text: 'TRIPLE!', t: 54 };
+      else if (lines === 2) fx.banner = { text: 'DOUBLE!', t: 46 };
+      if (leveledUp) fx.levelUp = 70;
+    }
+
+    function drawTetrisFx(c, st, X, Y, S, bw, bh) {
+      const fx = st.fx;
+      if (!fx) return;
+      const run = !tetrisPaused;
+      if (run) fx.frame++;
+      // brilho ao travar a peça
+      fx.lock = fx.lock.filter((l) => l.t > 0);
+      fx.lock.forEach((l) => {
+        c.fillStyle = 'rgba(255,255,255,' + (l.t / 12 * 0.65).toFixed(3) + ')';
+        l.cells.forEach((q) => c.fillRect(X + q[0] * S, Y + q[1] * S, S, S));
+        if (run) l.t--;
+      });
+      // faixa branca nas linhas limpas
+      fx.flashes = fx.flashes.filter((f) => f.t > 0);
+      fx.flashes.forEach((f) => {
+        const a = f.t / 14;
+        c.fillStyle = 'rgba(255,255,255,' + (a * 0.85).toFixed(3) + ')'; c.fillRect(X, Y + f.y * S, bw, S);
+        c.fillStyle = 'rgba(79,227,255,' + (a * 0.9).toFixed(3) + ')'; c.fillRect(X, Y + f.y * S + S / 2 - 1, bw, 2);
+        if (run) f.t--;
+      });
+      // partículas
+      fx.parts = fx.parts.filter((q) => q.life > 0);
+      fx.parts.forEach((q) => {
+        const a = Math.max(0, Math.min(1, q.life / q.max)), sz = Math.max(2, q.size * S);
+        c.globalAlpha = a; c.fillStyle = q.col; c.fillRect(Math.round(X + q.x * S - sz / 2), Math.round(Y + q.y * S - sz / 2), Math.round(sz), Math.round(sz));
+        c.fillStyle = '#ffffff'; c.fillRect(Math.round(X + q.x * S - sz / 2), Math.round(Y + q.y * S - sz / 2), Math.max(1, Math.round(sz / 3)), Math.max(1, Math.round(sz / 3)));
+        c.globalAlpha = 1;
+        if (run) { q.x += q.vx; q.y += q.vy; q.vy += q.g; q.life--; }
+      });
+      // pontos subindo
+      fx.pops = fx.pops.filter((q) => q.t > 0);
+      fx.pops.forEach((q) => {
+        const rise = (58 - q.t) * 0.9;
+        c.globalAlpha = Math.min(1, q.t / 22);
+        panelText(c, q.text, X + bw / 2, Y + q.y * S - rise + 10, '14px "Press Start 2P", monospace', q.col, null, 'center');
+        c.globalAlpha = 1;
+        if (run) q.t--;
+      });
+      // faixa grande (TETRIS! / DOUBLE! / TRIPLE!)
+      if (fx.banner && fx.banner.t > 0) {
+        const b = fx.banner, hue = (fx.frame * 9) % 360, pulse = 1 + Math.sin(fx.frame * 0.5) * 0.06;
+        c.save(); c.globalAlpha = Math.min(1, b.t / 26); c.translate(X + bw / 2, Y + bh * 0.36); c.scale(pulse, pulse);
+        panelText(c, b.text, 0, 0, '20px "Press Start 2P", monospace', 'hsl(' + hue + ',100%,62%)', null, 'center');
+        c.restore();
+        if (run) b.t--;
+      }
+      // subiu de nível
+      if (fx.levelUp > 0) {
+        const a = fx.levelUp / 70;
+        c.save(); c.strokeStyle = 'rgba(79,227,255,' + (0.35 + 0.65 * Math.abs(Math.sin(fx.frame * 0.35))).toFixed(3) + ')'; c.lineWidth = 4; c.strokeRect(X + 2, Y + 2, bw - 4, bh - 4);
+        c.globalAlpha = Math.min(1, a * 2); panelText(c, 'LEVEL UP!', X + bw / 2, Y + bh * 0.2, '14px "Press Start 2P", monospace', '#4fe3ff', null, 'center'); c.restore();
+        if (run) fx.levelUp--;
+      }
+    }
+
     function drawTetrisPanel() {
       const cv = document.getElementById('tetrisPanel');
       if (!cv) return;
@@ -3865,7 +4134,7 @@
       pxFrame(c, X - 9, Y - 9, bw + 18, bh + 18);
 
       const fieldBg = c.createLinearGradient(0, Y, 0, Y + bh);
-      fieldBg.addColorStop(0, '#0a0f2c'); fieldBg.addColorStop(1, '#16215e');
+      fieldBg.addColorStop(0, '#140a44'); fieldBg.addColorStop(1, '#2a1b7c');
       c.fillStyle = fieldBg; c.fillRect(X, Y, bw, bh);
       c.fillStyle = 'rgba(255,255,255,0.05)';
       for (let x = 1; x < COLS; x++) c.fillRect(X + x * S, Y, 1, bh);
@@ -3915,6 +4184,7 @@
         p.matrix.forEach((r, y) => r.forEach((v, x) => { if (v) drawBlock(c, X + (x + p.pos.x) * S, Y + (y + p.pos.y) * S, S, COLORS[p.type]); }));
       }
 
+      drawTetrisFx(c, st, X, Y, S, bw, bh);
       pxKey(c, 14, 12, 24, 24, 'C');
       panelText(c, 'HOLD', 46, 29, label, '#f1f3f7');
       pxSlot(c, 14, 44, 90, 84);
@@ -3927,17 +4197,17 @@
         drawPieceAt(c, t, nx + 45, 79 + i * 78, 16, 1);
       });
 
-      panelText(c, 'LINES', 16, 322, label, '#a9dce5');
+      panelText(c, 'LINES', 16, 322, label, '#9fe9ff');
       panelText(c, String(st.lines), 16, 350, value, '#ffffff', 90);
-      panelText(c, 'LEVEL', 16, 384, label, '#a9dce5');
+      panelText(c, 'LEVEL', 16, 384, label, '#9fe9ff');
       panelText(c, String(st.level), 16, 412, value, '#ffffff', 90);
-      pxBar(c, 14, 420, 90, 18, 10, st.lines % 10, '#a9dce5');
-      panelText(c, 'SCORE', 16, 470, label, '#a9dce5');
+      pxBar(c, 14, 420, 90, 18, 10, st.lines % 10, '#9fe9ff');
+      panelText(c, 'SCORE', 16, 470, label, '#9fe9ff');
       panelText(c, String(st.score), 16, 498, value, '#f5c04a', 90);
 
       const el = st.t0 ? Math.max(0, (st.gameOver && st.tEnd ? st.tEnd : (tetrisPaused ? tetrisPauseAt : performance.now())) - st.t0) : 0;
       const p2 = (n) => String(n).padStart(2, '0');
-      panelText(c, 'TIME', nx + 4, 470, label, '#a9dce5');
+      panelText(c, 'TIME', nx + 4, 470, label, '#9fe9ff');
       panelText(c, `${p2(Math.floor(el / 60000))}:${p2(Math.floor(el / 1000) % 60)}:${p2(Math.floor(el / 10) % 100)}`, nx + 4, 498, value, '#ffffff', W - nx - 14);
     }
 
